@@ -1,6 +1,6 @@
 # NAME: Captain Publisher
 #
-# DESCRIPTION: This image takes care of publishing of values to etcd. All ENVS starting with ETCD_VALUE_[NAME] are
+# DESCRIPTION: This image takes care of publishing values to etcd. All ENVS starting with ETCD_VALUE_[NAME] are
 # converted to name and appended to the ETCD_BASE_PATH.
 #
 # REQUIRED ENVS: ETCD_ENDPOINT, ETCD_CA_CERTIFICATE, ETCD_CERTIFICATE_KEY, ETCD_CERTIFICATE, ETCD_BASE_PATH, ETCD_TTL, REFRESH_TIME
