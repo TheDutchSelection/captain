@@ -15,7 +15,7 @@ write_container_environment_file () {
   mkdir -p $FILE_PATH
   cat /dev/null > "$(get_file_path_including_file_name)"
 
-  local etcd_tree=$(get_tree "$ETCD_BASE_PATH")
+  local etcd_tree="$(get_tree $ETCD_BASE_PATH)"
   local key_values="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | .key + "##" + .value')"
 
   while read -r key_value; do

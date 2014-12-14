@@ -52,11 +52,11 @@ write_iptables_rules_file () {
   cat /dev/null > "$(get_file_path_including_file_name)"
 
   # get all public ips from all zones
-  local etcd_tree=$(get_tree "$ETCD_BASE_PATH")
+  local etcd_tree="$(get_tree $ETCD_BASE_PATH)"
   local public_ips="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $av_zones | $av_zones.nodes[] | select(.key | contains("/hosts")) | .nodes[] as $hosts | $hosts.nodes[] as $keys | $keys | select(.key | contains("/public_ip")) | .value')"
   # get private ips from this zone
   if [[ ! -z "$ETCD_CURRENT_AVZONE_PATH" ]]; then
-    local etcd_tree=$(get_tree "$ETCD_CURRENT_AVZONE_PATH")
+    local etcd_tree="$(get_tree $ETCD_CURRENT_AVZONE_PATH)"
     local private_ips="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $hosts | $hosts.nodes[] as $keys | $keys | select(.key | contains("/private_ip")) | .value')"
   fi
   
