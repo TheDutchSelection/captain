@@ -4,7 +4,7 @@ set -e
 # include dependencies
 dir="${BASH_SOURCE%/*}"
 if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
-. "$dir/etcd_helper"
+. "$dir/captain_functions"
 
 echo "watching $ETCD_KEY for value $ETCD_VALUE..."
 end_loop=false

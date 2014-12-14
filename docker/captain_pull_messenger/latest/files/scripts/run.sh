@@ -4,7 +4,7 @@ set -e
 # include dependencies
 dir="${BASH_SOURCE%/*}"
 if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
-. "$dir/etcd_helper"
+. "$dir/captain_functions"
 
 pull_docker_image_command () {
   echo "/usr/bin/docker pull $IMAGE_COMPLETE"

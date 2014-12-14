@@ -4,16 +4,12 @@ set -e
 # include dependencies
 dir="${BASH_SOURCE%/*}"
 if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
-. "$dir/etcd_helper"
+. "$dir/captain_functions"
 
-get_file_path_including_file_name () {
-  echo "$FILE_PATH$FILE_NAME"
-}
 
 write_container_environment_file () {
   set -e
-  mkdir -p $FILE_PATH
-  cat /dev/null > "$(get_file_path_including_file_name)"
+  create_empty_file "$FILE_PATH" "$FILE_NAME"
 
   local etcd_tree="$(get_tree $ETCD_BASE_PATH)"
   local key_values="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | .key + "##" + .value')"
@@ -41,7 +37,7 @@ write_container_environment_file () {
       key=${key//\//_}
       key=${key//\-/_}
       if [[ ! -z "$key" && ! -z "$value" ]]; then
-        echo "$key=$value" >> "$(get_file_path_including_file_name)"
+        echo "$key=$value" >> "$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
       fi
     fi
   done <<< "$key_values"
@@ -49,13 +45,13 @@ write_container_environment_file () {
 
 watch_container_environment_file () {
   local end_loop=false
-  local current_file="$(get_file_path_including_file_name)"
+  local current_file="$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
   current_env="$(/usr/bin/stat -c%s $current_file)"
   while [[ "$end_loop" != true ]]; do
     # Now comparing on file size, because lines can shuffle per file. Should fix it by reading lines and comparing
     FILE_NAME="environment_watch"
     write_container_environment_file
-    local new_file="$(get_file_path_including_file_name)"
+    local new_file="$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
     new_env="$(/usr/bin/stat -c%s $new_file)"
     if [[ "$current_env" != "$new_env" && "$new_env" != "0" ]]; then
       echo "new environment file is different..."
@@ -73,9 +69,9 @@ watch_container_environment_file () {
 }
 
 if [[ "$MODE" == "init" ]]; then
-  echo "writing environment file at $(get_file_path_including_file_name)..."
+  echo "writing environment file at $(get_file_path_including_file_name $FILE_PATH $FILE_NAME)..."
   write_container_environment_file
 else
-  echo "watching changes for environment file at $(get_file_path_including_file_name)..."
+  echo "watching changes for environment file at $(get_file_path_including_file_name $FILE_PATH $FILE_NAME)..."
   watch_container_environment_file
 fi

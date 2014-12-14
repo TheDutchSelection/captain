@@ -4,36 +4,34 @@ set -e
 # include dependencies
 dir="${BASH_SOURCE%/*}"
 if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
-. "$dir/etcd_helper"
+. "$dir/captain_functions"
 
-get_keys_values_from_etcd_values () {
-  envs="$(env)"
+# transforms ETCD_VALUE_NAME to /etcd/path/to/key
+# $1: env_key
+etcd_key_from_env () {
+  env_key="$1"
+  local key=${env_key/ETCD_VALUE_/}
+  local key="$(echo $key | awk '{print tolower($0)}')"
+  local key="$ETCD_BASE_PATH$key"
 
-  local key_values=""
-  while read -r env; do
-    if [[ $env == *"ETCD_VALUE_"* ]]; then
-      local key_value=${env/ETCD_VALUE_/}
-      local key="$(echo $key_value | awk -F'=' '{print $1}')"
-      local value="$(echo $key_value | awk -F'=' '{print $2}')"
-      local key="$(echo $key | awk '{print tolower($0)}')"
-
-      local key_values="$key_values$key##$value "
-    fi
-  done <<< "$envs"
-
-  echo "$key_values"
+  echo "$key"
 }
 
-keys_values="$(get_keys_values_from_etcd_values)"
 while true; do
-  for key_value in $keys_values
-  do
-    etcd_key="$(echo $key_value | awk -F'##' '{print $1}')"
-    etcd_value="$(echo $key_value | awk -F'##' '{print $2}')"
+  envs="$(env)"
 
-    echo "publish $ETCD_BASE_PATH$etcd_key = $etcd_value to $ETCD_ENDPOINT with a ttl of $ETCD_TTL"
-    echo "$(set_value $ETCD_BASE_PATH$etcd_key $etcd_value $ETCD_TTL)"
-  done
+  while read -r env; do
+    # set every ETCD_VALUE_[NAME]
+    if [[ $env == *"ETCD_VALUE_"* ]]; then
+      env_key="$(echo $env | awk -F'=' '{print $1}')"
+      value="$(echo $env | awk -F'=' '{print $2}')"
+
+      key="$(etcd_key_from_env $env_key)"
+
+      echo "publish $key = $value to $ETCD_ENDPOINT with a ttl of $ETCD_TTL"
+      echo "$(set_value $key $value $ETCD_TTL)"
+    fi
+  done <<< "$envs"
 
   sleep "$REFRESH_TIME"
 done

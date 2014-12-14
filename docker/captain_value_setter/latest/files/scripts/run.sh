@@ -4,7 +4,7 @@ set -e
 # include dependencies
 dir="${BASH_SOURCE%/*}"
 if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
-. "$dir/etcd_helper"
+. "$dir/captain_functions"
 
 for key_value in $ETCD_SHORT_KEYS_VALUES; do
   key="$(echo $key_value | awk -F'##' '{print $1}')"

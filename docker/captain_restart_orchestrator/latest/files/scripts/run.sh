@@ -4,7 +4,7 @@ set -e
 # include dependencies
 dir="${BASH_SOURCE%/*}"
 if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
-. "$dir/etcd_helper"
+. "$dir/captain_functions"
 
 # $1: etcd need restart key
 set_restart_from_needs_restart_etcd_key () {

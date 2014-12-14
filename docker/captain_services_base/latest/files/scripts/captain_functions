@@ -20,72 +20,11 @@ get_file_path_including_file_name () {
   echo "$file_path$file_name"
 }
 
-# $1: etcd key
-get_value () {
-  set -e
-  etcd_key="$1"
-
-  result="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path$etcd_key)"
-
-  echo "$(unquoted_value_from_result $result)"
-}
-
-# $1: etcd path
-# $2: short etcd key
-# $3: etcd value
-get_keys_from_short_key_with_value () {
-  set -e
-  local etcd_path="$1"
-  local short_etcd_key="$2"
-  local etcd_value="$3"
-  local etcd_tree="$(get_tree $etcd_path)"
-  local quoted_keys="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$short_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .key')"
-  local keys=${quoted_keys//\"/}
-  echo "$keys"
-}
-
-# $1: app key
-get_app_path_from_app_key () {
-  set -e
-  local app_key="$1"
-  local result="$(echo $app_key | awk -F'/' '{print "/"$2"/"$3"/"$4"/"$5}')"
-  echo "$result"
-}
-
-# $1: etcd path
-# $2: short etcd key
-# $3: etcd value
-count_keys_with_value_for_app () {
-  local etcd_path="$1"
-  local short_etcd_key="$2"
-  local etcd_value="$3"
-  local etcd_tree="$(get_tree $etcd_path)"
-  local result="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$short_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .value' | wc -l)"
-  echo "$result"
-}
-
-# $1: etcd key
-# $2: etcd value
-# $3: etcd ttl
-set_value () {
-  set -e
-  etcd_key="$1"
-  etcd_value="$2"
-  etcd_ttl="$3"
-
-  if [[ -z "$etcd_ttl" ]]; then
-    result="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path$etcd_key -XPUT -d value=$etcd_value)"
-  else
-    result="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path$etcd_key -XPUT -d value=$etcd_value -d ttl=$etcd_ttl)"
-  fi
-
-  echo "$result"
-}
-
-# $1: full result
-unquoted_value_from_result () {
-  set -e
-  full_result="$1"
-  local json_value="$(echo $full_result | $dir/jq '.node.value')"
-  echo ${json_value//\"/}
+# $1: file_path
+# $2: file name
+create_empty_file () {
+  local file_path="$1"
+  local file_name="$2"
+  mkdir -p "$file_path"
+  cat /dev/null > "$(get_file_path_including_file_name $file_path $file_name)"
 }

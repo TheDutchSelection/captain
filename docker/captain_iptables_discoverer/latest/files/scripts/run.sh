@@ -1,11 +1,6 @@
 #!/bin/bash
 set -e
 
-# include dependencies
-dir="${BASH_SOURCE%/*}"
-if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
-. "$dir/captain_functions"
-
 read -r -d '' iptables_default_rules_start << EOM || true
 *filter
 
@@ -44,8 +39,7 @@ EOM
 
 write_iptables_rules_file () {
   set -e
-  mkdir -p $FILE_PATH
-  cat /dev/null > "$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
+  create_empty_file "$FILE_PATH" "$FILE_NAME"
 
   # get all public ips from all zones
   local etcd_tree="$(get_tree $ETCD_BASE_PATH)"
