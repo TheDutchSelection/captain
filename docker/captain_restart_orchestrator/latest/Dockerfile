@@ -13,7 +13,7 @@
 # -e ETCD_RESTART_KEY_VALUE="restart##1" -e ETCD_NEED_RESTART_KEY_VALUE="need_restart##1"
 # -e APP_EXCEPTIONS="test/##2 test2/##4" -e REFRESH_TIME="15" thedutchselection/captain_restart_orchestrator
 
-FROM thedutchselection/captain_services_base:1.0
+FROM thedutchselection/captain_services_base:latest
 MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>
 
 ADD files/scripts /usr/local/bin

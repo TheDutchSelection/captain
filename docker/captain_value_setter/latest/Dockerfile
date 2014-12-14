@@ -10,7 +10,7 @@
 # -e ETCD_CERTIFICATE="/path/to/certificate" -e ETCD_CERTIFICATE_KEY="/path/to/key" -e ETCD_BASE_PATH="/tds/doa3/containers/test/1/"
 # -e ETCD_KEYS_VALUES="need_restart##0  update##0 restart##0" thedutchselection/captain_value_setter
 
-FROM thedutchselection/captain_services_base:1.0
+FROM thedutchselection/captain_services_base:latest
 MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>
 
 ADD files/scripts /usr/local/bin

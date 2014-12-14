@@ -15,7 +15,7 @@
 # -e APP_KEYS="test/ test_2/" -e IGNORED_APP_KEY="test/1/" -e NEED_RESTART_KEY "need_restart" -e ETCD_CURRENT_APP="test/1/
 # "thedutchselection/captain_dicoverer
 
-FROM thedutchselection/captain_services_base:1.0
+FROM thedutchselection/captain_services_base:latest
 MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>
 
 RUN opkg-install coreutils-stat

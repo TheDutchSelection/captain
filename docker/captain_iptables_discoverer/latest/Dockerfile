@@ -12,7 +12,7 @@
 # -e FILE_NAME="tds_iptable_rules" -e MODE="init" -e ETCD_BASE_PATH="/tds/" -e ETCD_CURRENT_AVZONE_PATH="/tds/doa3/hosts/"
 # "thedutchselection/captain_iptables_discoverer
 
-FROM thedutchselection/captain_services_base:1.0
+FROM thedutchselection/captain_services_base:latest
 MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>
 
 RUN opkg-install coreutils-stat
