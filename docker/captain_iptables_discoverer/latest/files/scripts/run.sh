@@ -6,7 +6,8 @@ dir="${BASH_SOURCE%/*}"
 if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
 . "$dir/etcd_helper"
 
-iptables_default_rules_start="*filter
+read -r -d '' iptables_default_rules_start << EOM || true
+*filter
 
 :INPUT DROP [0:0]
 :FORWARD DROP [0:0]
@@ -31,24 +32,15 @@ iptables_default_rules_start="*filter
 
 # Accept SSH
 -A INPUT -p tcp --dport 22 -j ACCEPT
+EOM
 
-# Accept everything from trusted sources
-# Gerard Meijer Home
-# -A INPUT -p tcp -s 83.128.169.124 -j ACCEPT
-# Martijn van Leeuwen Home
-# -A INPUT -p tcp -s 83.80.182.202 -j ACCEPT
-# Websend Ziggo
-# -A INPUT -p tcp -s 213.124.35.208/29 -j ACCEPT
-# Websend Xs4all
-# -A INPUT -p tcp -s 80.101.112.131 -j ACCEPT"
-
-iptables_default_rules_end="
+read -r -d '' iptables_default_rules_end << EOM || true
 # Log and drop everything else
 -A INPUT -j LOG
 -A INPUT -j DROP
 
 COMMIT
-"
+EOM
 
 get_file_path_including_file_name () {
   echo "$FILE_PATH$FILE_NAME"
@@ -102,12 +94,18 @@ write_iptables_rules_file () {
   done <<< "$envs"
 
   echo "$iptables_default_rules_start" >> "$(get_file_path_including_file_name)"
-  echo "# public ip lines" >> "$(get_file_path_including_file_name)"
-  echo "$public_ip_rules" >> "$(get_file_path_including_file_name)"
-  echo "# private ip lines" >> "$(get_file_path_including_file_name)"
-  echo "$private_ip_rules" >> "$(get_file_path_including_file_name)"
-  echo "# extra lines" >> "$(get_file_path_including_file_name)"
-  echo "$extra_rules" >> "$(get_file_path_including_file_name)"
+  if [[ ! -z "$public_ip_rules" ]]; then
+    echo "# public ip lines" >> "$(get_file_path_including_file_name)"
+    echo "$public_ip_rules" >> "$(get_file_path_including_file_name)"
+  fi
+  if [[ ! -z "$private_ip_rules" ]]; then
+    echo "# private ip lines" >> "$(get_file_path_including_file_name)"
+    echo "$private_ip_rules" >> "$(get_file_path_including_file_name)"
+  fi
+  if [[ ! -z "$extra_rules" ]]; then
+    echo "# extra lines" >> "$(get_file_path_including_file_name)"
+    echo "$extra_rules" >> "$(get_file_path_including_file_name)"
+  fi
   echo "$iptables_default_rules_end" >> "$(get_file_path_including_file_name)"
 }
 
@@ -120,7 +118,8 @@ watch_iptables_rules_file () {
     write_iptables_rules_file
     local new_file="$(get_file_path_including_file_name)"
     new_rules="$(/usr/bin/stat -c%s $new_file)"
-    if [[ "$current_rules" != "$new_rules" && "$new_rules" != "0" ]]; then
+    new_rules_content="$(cat $new_file)"
+    if [[ "$current_rules" != "$new_rules" && ("$new_rules_content" == *"private ip lines"* || "$new_rules_content" == *"public ip lines"*) ]]; then
       end_loop=true
     fi
     sleep "$REFRESH_TIME"
