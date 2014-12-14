@@ -61,7 +61,7 @@ write_iptables_rules_file () {
   fi
   
   # public ip rules
-  local public_ip_rules=$'\n'
+  local public_ip_rules=""
   while read -r public_ip; do
     if [[ ! -z "$public_ip" ]]; then
       # remove all double quotes
@@ -72,7 +72,7 @@ write_iptables_rules_file () {
   done <<< "$public_ips"
 
   # private ip rules
-  local private_ip_rules=$'\n'
+  local private_ip_rules=""
   while read -r private_ip; do
     if [[ ! -z "$private_ip" ]]; then
       # remove all double quotes
@@ -84,7 +84,7 @@ write_iptables_rules_file () {
   
   # extra rules
   envs="$(env)"
-  local extra_rules=$'\n'
+  local extra_rules=""
   while read -r env; do
     if [[ $env == *"IPTABLES_RULE_"* ]]; then
       local extra_rule="$(echo $env | awk -F'=' '{print $2}')"
@@ -93,7 +93,7 @@ write_iptables_rules_file () {
     fi
   done <<< "$envs"
 
-  echo "$iptables_default_rules_start" >> "$(get_file_path_including_file_name)"
+  echo "$iptables_default_rules_start"'\n' >> "$(get_file_path_including_file_name)"
   if [[ ! -z "$public_ip_rules" ]]; then
     echo "# public ip lines" >> "$(get_file_path_including_file_name)"
     echo "$public_ip_rules" >> "$(get_file_path_including_file_name)"
