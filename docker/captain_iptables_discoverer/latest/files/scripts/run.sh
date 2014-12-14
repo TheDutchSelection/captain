@@ -71,19 +71,23 @@ write_iptables_rules_file () {
   # public ip rules
   local public_ip_rules=""
   while read -r public_ip; do
-    # remove all double quotes
-    public_ip=${public_ip//\"/}
-    local public_ip_rule="-A INPUT -p tcp -s $public_ip -j ACCEPT"$'\n'
-    local public_ip_rules="$public_ip_rules$public_ip_rule"
+    if [[ ! -z "$public_ip" ]]; then
+      # remove all double quotes
+      public_ip=${public_ip//\"/}
+      local public_ip_rule="-A INPUT -p tcp -s $public_ip -j ACCEPT"$'\n'
+      local public_ip_rules="$public_ip_rules$public_ip_rule"
+    fi
   done <<< "$public_ips"
 
   # private ip rules
   local private_ip_rules=""
   while read -r private_ip; do
-    # remove all double quotes
-    private_ip=${private_ip//\"/}
-    local private_ip_rule="-A INPUT -p tcp -s $private_ip -j ACCEPT"$'\n'
-    local private_ip_rules="$private_ip_rules$private_ip_rule"
+    if [[ ! -z "$private_ip" ]]; then
+      # remove all double quotes
+      private_ip=${private_ip//\"/}
+      local private_ip_rule="-A INPUT -p tcp -s $private_ip -j ACCEPT"$'\n'
+      local private_ip_rules="$private_ip_rules$private_ip_rule"
+    fi
   done <<< "$private_ips"
   
   # extra rules
