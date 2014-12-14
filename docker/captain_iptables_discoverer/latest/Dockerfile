@@ -15,6 +15,8 @@
 FROM thedutchselection/captain_services_base:1.0
 MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>
 
+RUN opkg-install coreutils-stat
+
 ADD files/scripts /usr/local/bin
 
 RUN chmod +x /usr/local/bin/*
