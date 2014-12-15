@@ -83,6 +83,7 @@ write_iptables_rules_file () {
     fi
   done <<< "$envs"
 
+  # put all together
   echo "$iptables_default_rules_start"$'\n' >> "$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
   if [[ ! -z "$public_ip_rules" ]]; then
     echo "# public ip lines" >> "$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"

@@ -6,41 +6,83 @@ dir="${BASH_SOURCE%/*}"
 if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
 . "$dir/captain_functions"
 
-
 write_container_environment_file () {
   set -e
   create_empty_file "$FILE_PATH" "$FILE_NAME"
 
+  # get all public ips
   local etcd_tree="$(get_tree $ETCD_BASE_PATH)"
-  local key_values="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | .key + "##" + .value')"
-
-  while read -r key_value; do
-    # remove ETCD_BASE_PATH
-    local app_key_value=${key_value/"$ETCD_BASE_PATH"/}
-    # remove all double quotes
-    app_key_value=${short_key_value//\"/}
-    # split in key and value
-    local key="$(echo $app_key_value | awk -F'##' '{print $1}')"
-    local value="$(echo $app_key_value | awk -F'##' '{print $2}')"
-    # check if the key is in the wanted keys and it is either host or port (all keys we want)
+  local public_ips="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $av_zones | $av_zones.nodes[] | select(.key | contains("/containers")) | .nodes[] as $containers | $hosts.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_public_ip")) | .key + "=" + .value')"
+  # get private ips and ports from this zone
+  #local key_values="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | .key + "##" + .value')"
+  local etcd_tree="$(get_tree $ETCD_CURRENT_AVZONE_PATH)"
+  local private_ips="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_private_ip")) | .key + "=" + .value')"
+  local ports="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/port")) | .key + "=" + .value')"
+  
+  # public ips
+  local public_ip_envs=""
+  while read -r public_ip; do
     include_key=false
     for app_key in $APP_KEYS
     do
-      if [[ $key == *"$app_key"* && ($key == *"/host_"* || $key == *"/port"*) && ($key != *"$IGNORED_APP_KEY"*) ]]; then
+      if [[ $public_ip == *"$app_key"* && $public_ip != *"$IGNORED_APP_KEY"* ]]; then
         include_key=true
         break
       fi
     done
-
+    
     if [[ "$include_key" == true ]]; then
-      key="$(echo $key | awk '{print toupper($0)}')"
-      key=${key//\//_}
-      key=${key//\-/_}
-      if [[ ! -z "$key" && ! -z "$value" ]]; then
-        echo "$key=$value" >> "$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
-      fi
+      public_ip_env="$(create_env_from_etcd_key_value $public_ip $ETCD_CURRENT_AVZONE_PATH)"$'\n'
+      public_ip_envs="$public_ip_envs$public_ip_env"
     fi
-  done <<< "$key_values"
+  done <<< "$public_ips"
+  
+  # private ips
+  local private_ip_envs=""
+  while read -r private_ip; do
+    include_key=false
+    for app_key in $APP_KEYS
+    do
+      if [[ $private_ip == *"$app_key"* && $private_ip != *"$IGNORED_APP_KEY"* ]]; then
+        include_key=true
+        break
+      fi
+    done
+    
+    if [[ "$include_key" == true ]]; then
+      private_ip_env="$(create_env_from_etcd_key_value $private_ip $ETCD_CURRENT_AVZONE_PATH)"$'\n'
+      private_ip_envs="$private_ip_envs$private_ip_env"
+    fi
+  done <<< "$private_ips"
+  
+  # ports
+  local port_envs=""
+  while read -r port; do
+    include_key=false
+    for app_key in $APP_KEYS
+    do
+      if [[ $port == *"$app_key"* && $port != *"$IGNORED_APP_KEY"* ]]; then
+        include_key=true
+        break
+      fi
+    done
+    
+    if [[ "$include_key" == true ]]; then
+      port_env="$(create_env_from_etcd_key_value $port $ETCD_CURRENT_AVZONE_PATH)"$'\n'
+      port_envs="$port_envs$port_env"
+    fi
+  done <<< "$ports"
+  
+  # put all together
+  if [[ ! -z "$public_ip_envs" ]]; then
+    echo "$public_ip_rules" >> "$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
+  fi
+  if [[ ! -z "$private_ip_envs" ]]; then
+    echo "$private_ip_envs" >> "$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
+  fi
+  if [[ ! -z "$port_envs" ]]; then
+    echo "$port_envs" >> "$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
+  fi
 }
 
 watch_container_environment_file () {
@@ -57,10 +99,10 @@ watch_container_environment_file () {
       echo "new environment file is different..."
       current_need_restart_value="$(get_value $NEED_RESTART_KEY)"
       if [[ current_need_restart_value == "1" ]]; then
-        echo "$ETCD_BASE_PATH$ETCD_CURRENT_APP$NEED_RESTART_KEY is already 1, doing nothing..."
+        echo "$ETCD_CURRENT_AVZONE_PATH$ETCD_CURRENT_APP$NEED_RESTART_KEY is already 1, doing nothing..."
       else
-        echo "setting $ETCD_BASE_PATH$ETCD_CURRENT_APP$NEED_RESTART_KEY to 1"
-        echo "$(set_value $ETCD_BASE_PATH$ETCD_CURRENT_APP$NEED_RESTART_KEY "1")"
+        echo "setting $ETCD_CURRENT_AVZONE_PATH$ETCD_CURRENT_APP$NEED_RESTART_KEY to 1"
+        echo "$(set_value $ETCD_CURRENT_AVZONE_PATH$ETCD_CURRENT_APP$NEED_RESTART_KEY "1")"
         end_loop=true
       fi
     fi
