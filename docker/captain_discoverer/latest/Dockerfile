@@ -13,7 +13,7 @@
 # -e ETCD_CERTIFICATE="/path/to/certificate" -e ETCD_CERTIFICATE_KEY="/path/to/key" -e ETCD_BASE_PATH="/tds/"
 # -e MODE="watch" -e REFRESH_TIME="45" -e FILE_PATH="/root/doa3/tds/containers/test/1" -e FILE_NAME="current-containers-env"
 # -e APP_KEYS="test/ test_2/" -e IGNORED_APP_KEY="test/1/" -e NEED_RESTART_KEY "need_restart" -e ETCD_CURRENT_APP="test/1/"
-# -e ETCD_CURRENT_AVZONE_PATH="/tds/doa3/containers/" thedutchselection/captain_dicoverer
+# -e ETCD_CURRENT_AVZONE_PATH="/tds/doa3/containers/" thedutchselection/captain_discoverer
 
 FROM thedutchselection/captain_services_base:latest
 MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>

@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+# include dependencies
+dir="${BASH_SOURCE%/*}"
+if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
+. "$dir/captain_functions"
+
 read -r -d '' iptables_default_rules_start << EOM || true
 *filter
 
