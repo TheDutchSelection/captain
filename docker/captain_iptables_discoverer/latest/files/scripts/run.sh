@@ -81,7 +81,7 @@ write_iptables_rules_file () {
   envs="$(env)"
   local extra_rules=""
   while read -r env; do
-    if [[ $env == *"IPTABLES_RULE_"* ]]; then
+    if [[ $env == "IPTABLES_RULE_"* ]]; then
       local extra_rule="$(echo $env | awk -F'=' '{print $2}')"
       local extra_rule="$extra_rule"$'\n'
       local extra_rules="$extra_rules$extra_rule"

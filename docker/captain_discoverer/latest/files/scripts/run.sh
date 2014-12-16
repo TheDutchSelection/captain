@@ -12,7 +12,7 @@ write_container_environment_file () {
 
   # get all public ips
   local etcd_tree="$(get_tree $ETCD_BASE_PATH)"
-  local public_ips="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $av_zones | $av_zones.nodes[] | select(.key | contains("/containers")) | .nodes[] as $containers | $hosts.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_public_ip")) | .key + "=" + .value')"
+  local public_ips="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $av_zones | $av_zones.nodes[] | select(.key | contains("/containers")) | .nodes[] as $containers | $containers.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_public_ip")) | .key + "=" + .value')"
   # get private ips and ports from this zone
   #local key_values="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | .key + "##" + .value')"
   local etcd_tree="$(get_tree $ETCD_CURRENT_AVZONE_PATH)"
