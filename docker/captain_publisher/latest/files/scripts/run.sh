@@ -22,14 +22,16 @@ while true; do
 
   while read -r env; do
     # set every ETCD_VALUE_[NAME]
-    if [[ $env == *"ETCD_VALUE_"* ]]; then
+    if [[ $env == "ETCD_VALUE_"* ]]; then
       env_key="$(echo $env | awk -F'=' '{print $1}')"
       value="$(echo $env | awk -F'=' '{print $2}')"
 
       key="$(etcd_key_from_env $env_key)"
 
-      echo "publish $key = $value to $ETCD_ENDPOINT with a ttl of $ETCD_TTL"
-      echo "$(set_value $key $value $ETCD_TTL)"
+      if [[ (! -z "$key") && (! -z "$value") ]]; then
+        echo "publish $key = $value to $ETCD_ENDPOINT with a ttl of $ETCD_TTL"
+        echo "$(set_value $key $value $ETCD_TTL)"
+      fi
     fi
   done <<< "$envs"
 
