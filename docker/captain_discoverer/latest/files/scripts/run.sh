@@ -24,7 +24,7 @@ write_container_environment_file () {
     include_key=false
     for app_key in $APP_KEYS
     do
-      if [[ $public_ip == *"$app_key"* && $public_ip != *"$IGNORED_APP_KEY"* ]]; then
+      if [[ $public_ip == *"$app_key"* && ( -z "$IGNORED_APP_KEY" || $public_ip != *"$IGNORED_APP_KEY"*) ]]; then
         include_key=true
         break
       fi
@@ -42,7 +42,7 @@ write_container_environment_file () {
     include_key=false
     for app_key in $APP_KEYS
     do
-      if [[ $private_ip == *"$app_key"* && $private_ip != *"$IGNORED_APP_KEY"* ]]; then
+      if [[ $private_ip == *"$app_key"* && ( -z "$IGNORED_APP_KEY" || $private_ip != *"$IGNORED_APP_KEY"*) ]]; then
         include_key=true
         break
       fi

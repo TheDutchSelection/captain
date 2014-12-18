@@ -5,9 +5,9 @@
 # file, if they differ, this container sets the specified "need restart" key to 1.
 #
 # REQUIRED ENVS: ETCD_ENDPOINT, ETCD_CA_CERTIFICATE, ETCD_CERTIFICATE_KEY, ETCD_CERTIFICATE, ETCD_BASE_PATH, MODE, FILE_PATH,
-# FILE_NAME, APP_KEYS, IGNORED_APP_KEY, ETCD_CURRENT_APP, ETCD_CURRENT_AVZONE_PATH
+# FILE_NAME, APP_KEYS, ETCD_CURRENT_APP, ETCD_CURRENT_AVZONE_PATH
 #
-# OPTIONAL ENVS: REFRESH_TIME (only in watch mode), NEED_RESTART_KEY (only in watch mode)
+# OPTIONAL ENVS: REFRESH_TIME (only in watch mode), NEED_RESTART_KEY (only in watch mode), IGNORED_APP_KEY
 #
 # USAGE EXAMPLE: docker run -e ETCD_ENDPOINT "https://127.0.0.1:4001" -e ETCD_CA_CERTIFICATE="/path/to/ca_certificate"
 # -e ETCD_CERTIFICATE="/path/to/certificate" -e ETCD_CERTIFICATE_KEY="/path/to/key" -e ETCD_BASE_PATH="/tds/"
