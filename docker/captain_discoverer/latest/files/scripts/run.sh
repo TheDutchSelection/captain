@@ -32,7 +32,7 @@ write_container_environment_file () {
     
     if [[ "$include_key" == true ]]; then
       public_ip_env="$(create_env_from_etcd_key_value $public_ip $ETCD_CURRENT_AVZONE_PATH)"
-      if [[ -z "$public_ip_envs" ]]; then
+      if [[ ! -z "$public_ip_envs" ]]; then
         public_ip_envs="$public_ip_envs"$'\n'"$public_ip_env"
       else
         public_ip_envs="$public_ip_env"
@@ -54,7 +54,7 @@ write_container_environment_file () {
     
     if [[ "$include_key" == true ]]; then
       private_ip_env="$(create_env_from_etcd_key_value $private_ip $ETCD_CURRENT_AVZONE_PATH)"
-      if [[ -z "$private_ip_envs" ]]; then
+      if [[ ! -z "$private_ip_envs" ]]; then
         private_ip_envs="$private_ip_envs"$'\n'"$private_ip_env"
       else
         private_ip_envs="$private_ip_env"
@@ -76,7 +76,7 @@ write_container_environment_file () {
     
     if [[ "$include_key" == true ]]; then
       port_env="$(create_env_from_etcd_key_value $port $ETCD_CURRENT_AVZONE_PATH)"
-      if [[ -z "$port_envs" ]]; then
+      if [[ ! -z "$port_envs" ]]; then
         port_envs="$port_envs"$'\n'"$port_env"
       else
         port_envs="$port_env"
