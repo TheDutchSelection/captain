@@ -31,8 +31,12 @@ write_container_environment_file () {
     done
     
     if [[ "$include_key" == true ]]; then
-      public_ip_env="$(create_env_from_etcd_key_value $public_ip $ETCD_CURRENT_AVZONE_PATH)"$'\n'
-      public_ip_envs="$public_ip_envs$public_ip_env"
+      public_ip_env="$(create_env_from_etcd_key_value $public_ip $ETCD_CURRENT_AVZONE_PATH)"
+      if [[ -z "$public_ip_envs" ]]; then
+        public_ip_envs="$public_ip_envs"$'\n'"$public_ip_env"
+      else
+        public_ip_envs="$public_ip_env"
+      fi
     fi
   done <<< "$public_ips"
   
@@ -49,8 +53,12 @@ write_container_environment_file () {
     done
     
     if [[ "$include_key" == true ]]; then
-      private_ip_env="$(create_env_from_etcd_key_value $private_ip $ETCD_CURRENT_AVZONE_PATH)"$'\n'
-      private_ip_envs="$private_ip_envs$private_ip_env"
+      private_ip_env="$(create_env_from_etcd_key_value $private_ip $ETCD_CURRENT_AVZONE_PATH)"
+      if [[ -z "$private_ip_envs" ]]; then
+        private_ip_envs="$private_ip_envs"$'\n'"$private_ip_env"
+      else
+        private_ip_envs="$private_ip_env"
+      fi
     fi
   done <<< "$private_ips"
   
@@ -60,21 +68,25 @@ write_container_environment_file () {
     include_key=false
     for app_key in $APP_KEYS
     do
-      if [[ $port == *"$app_key"* && $port != *"$IGNORED_APP_KEY"* ]]; then
+      if [[ $port == *"$app_key"* && ( -z "$IGNORED_APP_KEY" || $port != *"$IGNORED_APP_KEY"*) ]]; then
         include_key=true
         break
       fi
     done
     
     if [[ "$include_key" == true ]]; then
-      port_env="$(create_env_from_etcd_key_value $port $ETCD_CURRENT_AVZONE_PATH)"$'\n'
-      port_envs="$port_envs$port_env"
+      port_env="$(create_env_from_etcd_key_value $port $ETCD_CURRENT_AVZONE_PATH)"
+      if [[ -z "$port_envs" ]]; then
+        port_envs="$port_envs"$'\n'"$port_env"
+      else
+        port_envs="$port_env"
+      fi
     fi
   done <<< "$ports"
   
   # put all together
   if [[ ! -z "$public_ip_envs" ]]; then
-    echo "$public_ip_rules" >> "$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
+    echo "$public_ip_envs" >> "$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
   fi
   if [[ ! -z "$private_ip_envs" ]]; then
     echo "$private_ip_envs" >> "$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
