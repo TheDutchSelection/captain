@@ -24,7 +24,7 @@ write_container_environment_file () {
     include_key=false
     for app_key in $APP_KEYS
     do
-      if [[ $public_ip == *"$app_key"* && ( -z "$IGNORED_APP_KEY" || $public_ip != *"$IGNORED_APP_KEY"*) ]]; then
+      if [[ $public_ip == *"/$app_key"* && ( -z "$IGNORED_APP_KEY" || $public_ip != *"$IGNORED_APP_KEY"*) ]]; then
         include_key=true
         break
       fi
@@ -46,7 +46,7 @@ write_container_environment_file () {
     include_key=false
     for app_key in $APP_KEYS
     do
-      if [[ $private_ip == *"$app_key"* && ( -z "$IGNORED_APP_KEY" || $private_ip != *"$IGNORED_APP_KEY"*) ]]; then
+      if [[ $private_ip == *"/$app_key"* && ( -z "$IGNORED_APP_KEY" || $private_ip != *"$IGNORED_APP_KEY"*) ]]; then
         include_key=true
         break
       fi
@@ -68,7 +68,7 @@ write_container_environment_file () {
     include_key=false
     for app_key in $APP_KEYS
     do
-      if [[ $port == *"$app_key"* && ( -z "$IGNORED_APP_KEY" || $port != *"$IGNORED_APP_KEY"*) ]]; then
+      if [[ $port == *"/$app_key"* && ( -z "$IGNORED_APP_KEY" || $port != *"$IGNORED_APP_KEY"*) ]]; then
         include_key=true
         break
       fi
@@ -110,9 +110,9 @@ watch_container_environment_file () {
       echo "new environment file is different..."
       current_need_restart_value="$(get_value $NEED_RESTART_KEY)"
       if [[ current_need_restart_value == "1" ]]; then
-        echo "$ETCD_CURRENT_AVZONE_PATH$ETCD_CURRENT_APP$NEED_RESTART_KEY is already 1, doing nothing..."
+        echo "$ETCD_CURRENT_APP$NEED_RESTART_KEY is already 1, doing nothing..."
       else
-        echo "setting $ETCD_CURRENT_AVZONE_PATH$ETCD_CURRENT_APP$NEED_RESTART_KEY to 1"
+        echo "setting $ETCD_CURRENT_APP$NEED_RESTART_KEY to 1"
         echo "$(set_value $ETCD_CURRENT_AVZONE_PATH$ETCD_CURRENT_APP$NEED_RESTART_KEY "1")"
         end_loop=true
       fi
