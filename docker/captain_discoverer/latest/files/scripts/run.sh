@@ -113,7 +113,7 @@ watch_container_environment_file () {
         echo "$ETCD_CURRENT_APP$NEED_RESTART_KEY is already 1, doing nothing..."
       else
         echo "setting $ETCD_CURRENT_APP$NEED_RESTART_KEY to 1"
-        echo "$(set_value $ETCD_CURRENT_AVZONE_PATH$ETCD_CURRENT_APP$NEED_RESTART_KEY "1")"
+        echo "$(set_value $ETCD_CURRENT_AVZONE_PATH$ETCD_CURRENT_APP$NEED_RESTART_KEY 1)"
         end_loop=true
       fi
     fi
