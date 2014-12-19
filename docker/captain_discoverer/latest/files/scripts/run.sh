@@ -110,10 +110,10 @@ watch_container_environment_file () {
       echo "new environment file is different..."
       current_need_restart_value="$(get_value $NEED_RESTART_KEY)"
       if [[ current_need_restart_value == "1" ]]; then
-        echo "$ETCD_CURRENT_APP$NEED_RESTART_KEY is already 1, doing nothing..."
+        echo "$NEED_RESTART_KEY is already 1, doing nothing..."
       else
-        echo "setting $ETCD_CURRENT_APP$NEED_RESTART_KEY to 1"
-        echo "$(set_value $ETCD_CURRENT_AVZONE_PATH$ETCD_CURRENT_APP$NEED_RESTART_KEY 1)"
+        echo "setting $NEED_RESTART_KEY to 1"
+        echo "$(set_value $NEED_RESTART_KEY 1)"
         end_loop=true
       fi
     fi
