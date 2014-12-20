@@ -23,18 +23,21 @@ while true; do
   restart_value="$(echo $ETCD_RESTART_KEY_VALUE | awk -F'##' '{print $2}')"
 
   echo "get $short_need_restart_key where value is $need_restart_value"
-  need_restart_keys=$(get_keys_from_short_key_with_value "$ETCD_BASE_PATH" "$short_need_restart_key" "$need_restart_value")
+  need_restart_keys="$(get_keys_from_short_key_with_value $ETCD_BASE_PATH $short_need_restart_key $need_restart_value)"
 
+  echo "ETCD_BASE_PATH: $ETCD_BASE_PATH"
+  echo "short_need_restart_key: $short_need_restart_key"
+  echo "need_restart_value: $need_restart_value"
   echo "need_restart_keys: $need_restart_keys"
   # walk through all containers that need a restart
   while read -r need_restart_key; do
     echo "$need_restart_key is $need_restart_value, container needs restart"
     # get the relevant apps path
-    relevant_etcd_app_path=$(get_app_path_from_app_key "$need_restart_key")
+    relevant_etcd_app_path="$(get_app_path_from_app_key $need_restart_key)"
 
     echo "checking how many containers are restarting for $relevant_etcd_app_path..."
     # count the current amount of restarts processing for the app path
-    current_restarts=$(count_keys_with_value_for_app "$relevant_etcd_app_path" "$restart_key" "$restart_value")
+    current_restarts="$(count_keys_with_value_for_app $relevant_etcd_app_path $restart_key $restart_value)"
     echo "$current_restarts"
 
     # set the max restarts for this app
