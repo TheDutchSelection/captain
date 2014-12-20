@@ -16,13 +16,13 @@ set_restart_from_needs_restart_etcd_key () {
   fi
 }
 
+echo "get $short_need_restart_key where value is $need_restart_value every $REFRESH_TIME seconds..."
 while true; do
   short_need_restart_key="$(echo $ETCD_NEED_RESTART_KEY_VALUE | awk -F'##' '{print $1}')"
   need_restart_value="$(echo $ETCD_NEED_RESTART_KEY_VALUE | awk -F'##' '{print $2}')"
   restart_key="$(echo $ETCD_RESTART_KEY_VALUE | awk -F'##' '{print $1}')"
   restart_value="$(echo $ETCD_RESTART_KEY_VALUE | awk -F'##' '{print $2}')"
 
-  echo "get $short_need_restart_key where value is $need_restart_value"
   need_restart_keys="$(get_keys_from_short_key_with_value $ETCD_BASE_PATH $short_need_restart_key $need_restart_value)"
 
   # walk through all containers that need a restart
