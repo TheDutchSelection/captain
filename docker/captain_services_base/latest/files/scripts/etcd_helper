@@ -40,6 +40,9 @@ get_keys_from_short_key_with_value () {
   local etcd_tree="$(get_tree $etcd_path)"
   local quoted_keys="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$short_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .key')"
   local keys=${quoted_keys//\"/}
+  if [[ "$keys" != *"/"* ]]; then
+    local keys=""
+  fi
   echo "$keys"
 }
 
