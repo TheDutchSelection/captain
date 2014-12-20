@@ -23,12 +23,8 @@ while true; do
   restart_value="$(echo $ETCD_RESTART_KEY_VALUE | awk -F'##' '{print $2}')"
 
   echo "get $short_need_restart_key where value is $need_restart_value"
-  need_restart_keys="$(get_keys_from_short_key_with_valu $ETCD_BASE_PATH $short_need_restart_key $need_restart_value)"
+  need_restart_keys="$(get_keys_from_short_key_with_value $ETCD_BASE_PATH $short_need_restart_key $need_restart_value)"
 
-  echo "ETCD_BASE_PATH: $ETCD_BASE_PATH"
-  echo "short_need_restart_key: $short_need_restart_key"
-  echo "need_restart_value: $need_restart_value"
-  echo "need_restart_keys: $need_restart_keys"
   # walk through all containers that need a restart
   while read -r need_restart_key; do
     echo "$need_restart_key is $need_restart_value, container needs restart"
