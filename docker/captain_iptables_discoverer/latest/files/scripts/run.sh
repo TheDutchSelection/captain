@@ -64,7 +64,7 @@ write_iptables_rules_file () {
     if [[ ! -z "$public_ip" ]]; then
       # remove all double quotes
       public_ip=${public_ip//\"/}
-      local public_ip_rule="-A INPUT -p tcp -s $public_ip -j ACCEPT"$'\n'
+      local public_ip_rule="-A INPUT -p tcp -s $public_ip -j ACCEPT"$'\n'"-A INPUT -p udp -s $public_ip -j ACCEPT"$'\n'
       local public_ip_rules="$public_ip_rules$public_ip_rule"
     fi
   done <<< "$public_ips"
@@ -75,7 +75,7 @@ write_iptables_rules_file () {
     if [[ ! -z "$private_ip" ]]; then
       # remove all double quotes
       private_ip=${private_ip//\"/}
-      local private_ip_rule="-A INPUT -p tcp -s $private_ip -j ACCEPT"$'\n'
+      local private_ip_rule="-A INPUT -p tcp -s $private_ip -j ACCEPT"$'\n'"-A INPUT -p udp -s $private_ip -j ACCEPT"$'\n'
       local private_ip_rules="$private_ip_rules$private_ip_rule"
     fi
   done <<< "$private_ips"
