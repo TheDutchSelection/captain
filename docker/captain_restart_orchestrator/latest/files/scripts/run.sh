@@ -9,7 +9,7 @@ if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
 # $1: etcd need restart key
 set_restart_from_needs_restart_etcd_key () {
   local need_restart_key="$1"
-  local restart_key="$(echo $need_restart_key | awk -F'/' '{print "/"$2"/"$3"/"$4"/"$5"/"$6"/"}')$restart_key"
+  local restart_key=${need_restart_key/"$short_need_restart_key"/"$short_restart_key"}
   local current_restart_value=$(get_value "$restart_key")
   if [[ "$current_restart_value" != "$restart_value" ]]; then
     set_value "$restart_key" "$restart_value"
@@ -18,7 +18,9 @@ set_restart_from_needs_restart_etcd_key () {
 
 short_need_restart_key="$(echo $ETCD_NEED_RESTART_KEY_VALUE | awk -F'##' '{print $1}')"
 need_restart_value="$(echo $ETCD_NEED_RESTART_KEY_VALUE | awk -F'##' '{print $2}')"
-restart_key="$(echo $ETCD_RESTART_KEY_VALUE | awk -F'##' '{print $1}')"
+short_update_key="$(echo $ETCD_UPDATE_KEY_VALUE | awk -F'##' '{print $1}')"
+update_value="$(echo $ETCD_UPDATE_KEY_VALUE | awk -F'##' '{print $2}')"
+short_restart_key="$(echo $ETCD_RESTART_KEY_VALUE | awk -F'##' '{print $1}')"
 restart_value="$(echo $ETCD_RESTART_KEY_VALUE | awk -F'##' '{print $2}')"
 
 echo "get $short_need_restart_key where value is $need_restart_value every $REFRESH_TIME seconds..."
@@ -51,8 +53,14 @@ while true; do
 
       echo "max restarts for $relevant_etcd_app_path is $max_restarts"
       if [[ "$max_restarts" > "$current_restarts" ]]; then
-        echo "setting restart value for container with $need_restart_key"
-        set_restart_from_needs_restart_etcd_key "$need_restart_key"
+        update_key=${need_restart_key/"$short_need_restart_key"/"$short_update_key"}
+        current_update_value=$(get_value "$update_key")
+        if [[ "$current_update_value" = "$update_value" ]]; then
+          echo "currently updating, not restarting"
+        else
+          echo "setting restart value for container with $need_restart_key"
+          set_restart_from_needs_restart_etcd_key "$need_restart_key"
+        fi
       else
         echo "max restarts reached, not restarting"
       fi
