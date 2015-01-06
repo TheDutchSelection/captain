@@ -8,6 +8,7 @@
 # FILE_NAME, APP_KEYS, ETCD_CURRENT_APP, ETCD_CURRENT_AVZONE_PATH
 #
 # OPTIONAL ENVS: REFRESH_TIME (only in watch mode), NEED_RESTART_KEY (only in watch mode), IGNORED_APP_KEY
+# ETCD_CACHE_SECONDS, ETCD_CACHE_FILE
 #
 # USAGE EXAMPLE: docker run -e ETCD_ENDPOINT "https://127.0.0.1:4001" -e ETCD_CA_CERTIFICATE="/path/to/ca_certificate"
 # -e ETCD_CERTIFICATE="/path/to/certificate" -e ETCD_CERTIFICATE_KEY="/path/to/key" -e ETCD_BASE_PATH="/tds/"
@@ -17,8 +18,6 @@
 
 FROM thedutchselection/captain_services_base:latest
 MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>
-
-RUN opkg-install coreutils-stat
 
 ADD files/scripts /usr/local/bin
 

@@ -11,7 +11,7 @@
 FROM progrium/busybox
 MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>
 
-RUN opkg-install curl bash
+RUN opkg-install curl bash coreutils-stat
 
 ADD files/scripts /usr/local/bin
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 # DESCRIPTION: Helper with functions to interact with etcd
 # DEPENDENCIES: jq (http://stedolan.github.io/jq/download/)
-# REQUIRED ENVS: ETCD_ENDPOINT, ETCD_CA_CERTIFICATE, ETCD_CERTIFICATE_KEY, ETCD_CERTIFICATE
+# REQUIRED ENVS: ETCD_ENDPOINT, ETCD_CA_CERTIFICATE, ETCD_CERTIFICATE_KEY, ETCD_CERTIFICATE, ETCD_CACHE_SECONDS, ETCD_CACHE_FILE
 # OPTIONAL ENVS:
 # USAGE:
 # EXAMPLE:
@@ -9,12 +9,51 @@ set -e
 
 etcd_curl_base_path="/v2/keys"
 
+# $1: file
+# $2: max_age_seconds
+# 0 if not older and 1 if older
+file_older_than_seconds () {
+  local file="$1"
+  local max_age_seconds="$2"
+  local result="1"
+  local current_seconds=$(date +%s)
+  if [[ -e "$file" ]]; then
+    local file_stat=$(stat -c '%Y' "$file")
+    local file_age=$(expr "$current_seconds" - "$file_stat")
+    if (( "$file_age" < "$max_age_seconds" )); then
+      local result="0"
+    fi
+  fi
+
+  echo "$result"
+}
+
 # $1: etcd path
 get_tree () {
   set -e
-  etcd_path="$1"
+  local etcd_path="$1"
 
-  result="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path$etcd_path?recursive=true)"
+  if [[ -z "$ETCD_CACHE_FILE" ]]; then
+    ETCD_CACHE_FILE="/tmp/get_tree_cache"
+  fi
+
+  if [[ -z "$ETCD_CACHE_SECONDS" ]]; then
+    ETCD_CACHE_SECONDS="30"
+  fi
+
+  local file="$ETCD_CACHE_FILE"
+  local max_cache_seconds="$ETCD_CACHE_SECONDS"
+  local file_to_old="$(file_older_than_seconds $file $max_cache_seconds)"
+
+  if [[ "$file_to_old" == "1" ]]; then
+    local result="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path$etcd_path?recursive=true)"
+
+    local temp_file="$file""_temp"
+    echo "$result" > "$temp_file"
+    mv "$temp_file" "$file"
+  else
+    local result=$(<"$file")
+  fi
 
   echo "$result"
 }
@@ -23,10 +62,9 @@ get_tree () {
 get_value () {
   set -e
   etcd_key="$1"
-
-  result="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path$etcd_key)"
-
-  echo "$(unquoted_value_from_result $result)"
+  local etcd_tree="$(get_tree $etcd_path)"
+  local quoted_result="$(echo $etcd_tree | $dir/jq '.node | recurse(.nodes[]?) | select(.key | contains("'"$etcd_key"'")) | .value')"
+  echo ${quoted_result//\"/}
 }
 
 # $1: etcd path
@@ -79,12 +117,4 @@ set_value () {
   fi
 
   echo "$result"
-}
-
-# $1: full result
-unquoted_value_from_result () {
-  set -e
-  full_result="$1"
-  local json_value="$(echo $full_result | $dir/jq '.node.value')"
-  echo ${json_value//\"/}
 }
