@@ -41,7 +41,8 @@ get_tree () {
     ETCD_CACHE_SECONDS="30"
   fi
 
-  local file="$ETCD_CACHE_FILE"
+  local etcd_path_file_append=${etcd_path//\//_}
+  local file="$ETCD_CACHE_FILE$etcd_path_file_append"
   local max_cache_seconds="$ETCD_CACHE_SECONDS"
   local file_to_old="$(file_older_than_seconds $file $max_cache_seconds)"
 
