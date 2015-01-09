@@ -33,6 +33,10 @@ get_tree () {
   set -e
   local etcd_path="$1"
 
+  if [[ "$etcd_path" != "/" ]]; then
+    local etcd_path=${1%/}
+  fi
+
   if [[ -z "$ETCD_CACHE_FILE" ]]; then
     ETCD_CACHE_FILE="/tmp/etcd_tree_cache"
   fi
