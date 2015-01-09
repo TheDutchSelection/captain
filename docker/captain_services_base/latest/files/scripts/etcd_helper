@@ -115,12 +115,12 @@ set_value () {
   etcd_value="$2"
   etcd_ttl="$3"
 
-  local etcd_curl_base_path=${etcd_curl_base_path%/}
+  local etcd_curl_base_path_without_slash=${etcd_curl_base_path%/}
 
   if [[ -z "$etcd_ttl" ]]; then
-    result="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path$etcd_key -XPUT -d value=$etcd_value)"
+    result="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path_without_slash$etcd_key -XPUT -d value=$etcd_value)"
   else
-    result="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path$etcd_key -XPUT -d value=$etcd_value -d ttl=$etcd_ttl)"
+    result="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path_without_slash$etcd_key -XPUT -d value=$etcd_value -d ttl=$etcd_ttl)"
   fi
 
   echo "$result"
