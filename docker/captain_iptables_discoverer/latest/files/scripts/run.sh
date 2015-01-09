@@ -23,9 +23,9 @@ read -r -d '' iptables_default_rules_start << EOM || true
 # Allow docker to other interfaces
 -A INPUT -i docker0 -j ACCEPT
 
--# Allow docker forwarding
---A FORWARD -i docker0 -o eth0 -j ACCEPT
---A FORWARD -i docker0 -o eth1 -j ACCEPT
+# Allow docker forwarding
+-A FORWARD -i docker0 -o eth0 -j ACCEPT
+-A FORWARD -i docker0 -o eth1 -j ACCEPT
 
 # Accept Pings
 -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
