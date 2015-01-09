@@ -23,12 +23,6 @@ read -r -d '' iptables_default_rules_start << EOM || true
 # Allow docker to other interfaces
 -A INPUT -i docker0 -j ACCEPT
 
-# Allow docker forwarding
--A FORWARD -i docker0 -o eth0 -j ACCEPT
--A FORWARD -i docker0 -o eth1 -j ACCEPT
--A FORWARD -i eth0 -o docker0 -j ACCEPT
--A FORWARD -i eth1 -o docker0 -j ACCEPT
-
 # Accept Pings
 -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
 
@@ -66,7 +60,7 @@ write_iptables_rules_file () {
     if [[ ! -z "$public_ip" ]]; then
       # remove all double quotes
       public_ip=${public_ip//\"/}
-      local public_ip_rule="-A INPUT -p tcp -s $public_ip -j ACCEPT"$'\n'"-A INPUT -p udp -s $public_ip -j ACCEPT"$'\n'
+      local public_ip_rule="-A INPUT -p tcp -s $public_ip -j ACCEPT"$'\n'"-A INPUT -p udp -s $public_ip -j ACCEPT"$'\n'"-A FORWARD -p tcp -s $public_ip -j ACCEPT"$'\n'"-A FORWARD -p udp -s $public_ip -j ACCEPT"$'\n'
       local public_ip_rules="$public_ip_rules$public_ip_rule"
     fi
   done <<< "$public_ips"
@@ -77,7 +71,7 @@ write_iptables_rules_file () {
     if [[ ! -z "$private_ip" ]]; then
       # remove all double quotes
       private_ip=${private_ip//\"/}
-      local private_ip_rule="-A INPUT -p tcp -s $private_ip -j ACCEPT"$'\n'"-A INPUT -p udp -s $private_ip -j ACCEPT"$'\n'
+      local private_ip_rule="-A INPUT -p tcp -s $private_ip -j ACCEPT"$'\n'"-A INPUT -p udp -s $private_ip -j ACCEPT"$'\n'"-A FORWARD -p tcp -s $private_ip -j ACCEPT"$'\n'"-A FORWARD -p udp -s $private_ip -j ACCEPT"$'\n'
       local private_ip_rules="$private_ip_rules$private_ip_rule"
     fi
   done <<< "$private_ips"
