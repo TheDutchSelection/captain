@@ -41,6 +41,8 @@ read -r -d '' iptables_default_rules_end << EOM || true
 # Log and drop everything else
 -A INPUT -j LOG
 -A INPUT -j DROP
+-A FORWARD -j LOG
+-A FORWARD -j DROP
 
 COMMIT
 EOM
