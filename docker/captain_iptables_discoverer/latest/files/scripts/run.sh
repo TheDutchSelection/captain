@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+trap "exit" SIGINT SIGTERM
+
 # include dependencies
 dir="${BASH_SOURCE%/*}"
 if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
