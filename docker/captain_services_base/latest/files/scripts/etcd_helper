@@ -7,7 +7,7 @@
 # EXAMPLE:
 set -e
 
-etcd_curl_base_path="/v2/keys"
+etcd_curl_base_path="/v2/keys/"
 
 # $1: file
 # $2: max_age_seconds
@@ -34,27 +34,27 @@ get_tree () {
   local etcd_path="$1"
 
   if [[ -z "$ETCD_CACHE_FILE" ]]; then
-    ETCD_CACHE_FILE="/tmp/get_tree_cache"
+    ETCD_CACHE_FILE="/tmp/etcd_tree_cache"
   fi
 
   if [[ -z "$ETCD_CACHE_SECONDS" ]]; then
     ETCD_CACHE_SECONDS="30"
   fi
 
-  local etcd_path_file_append=${etcd_path//\//_}
-  local file="$ETCD_CACHE_FILE$etcd_path_file_append"
+  local file="$ETCD_CACHE_FILE"
   local max_cache_seconds="$ETCD_CACHE_SECONDS"
   local file_to_old="$(file_older_than_seconds $file $max_cache_seconds)"
 
   if [[ "$file_to_old" == "1" ]]; then
-    local result="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path$etcd_path?recursive=true)"
-
-    local temp_file="$file""_temp"
-    echo "$result" > "$temp_file"
+    local etcd_tree="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path?recursive=true)"
+    local time_stamp=$(date +"%N")
+    local temp_file="$file""_$time_stamp"
+    echo "$etcd_tree" > "$temp_file"
     mv "$temp_file" "$file"
-  else
-    local result=$(<"$file")
   fi
+
+  local file_content=$(<"$file")
+  local result=$(echo "$file_content" | "$dir"/jq '.node | recurse(.nodes[]?) | select(.key | . == "'"$etcd_path"'") | .')
 
   echo "$result"
 }
@@ -65,7 +65,7 @@ get_value () {
   etcd_key="$1"
   etcd_path="/"
   local etcd_tree="$(get_tree $etcd_path)"
-  local quoted_result="$(echo $etcd_tree | $dir/jq '.node | recurse(.nodes[]?) | select(.key | contains("'"$etcd_key"'")) | .value')"
+  local quoted_result="$(echo $etcd_tree | $dir/jq 'recurse(.nodes[]?) | select(.key | contains("'"$etcd_key"'")) | .value')"
   echo ${quoted_result//\"/}
 }
 
@@ -78,7 +78,7 @@ get_keys_from_short_key_with_value () {
   local short_etcd_key="$2"
   local etcd_value="$3"
   local etcd_tree="$(get_tree $etcd_path)"
-  local quoted_keys="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$short_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .key')"
+  local quoted_keys="$(echo $etcd_tree | $dir/jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$short_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .key')"
   local keys=${quoted_keys//\"/}
   echo "$keys"
 }
@@ -99,7 +99,7 @@ count_keys_with_value_for_app () {
   local short_etcd_key="$2"
   local etcd_value="$3"
   local etcd_tree="$(get_tree $etcd_path)"
-  local result="$(echo $etcd_tree | $dir/jq '.node.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$short_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .value' | wc -l)"
+  local result="$(echo $etcd_tree | $dir/jq '.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$short_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .value' | wc -l)"
   echo "$result"
 }
 
