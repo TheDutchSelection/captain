@@ -47,8 +47,7 @@ get_tree () {
 
   if [[ "$file_to_old_or_non_existant" == "1" ]]; then
     local etcd_tree="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path?recursive=true)"
-    local time_stamp=$(date +"%N")
-    local temp_file="$file""_$time_stamp"
+    local temp_file="$file""_$RANDOM"
     echo "$etcd_tree" > "$temp_file"
     mv "$temp_file" "$file"
   fi
