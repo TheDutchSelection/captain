@@ -20,12 +20,9 @@ read -r -d '' iptables_default_rules_start << EOM || true
 -A INPUT -p icmp --icmp-type destination-unreachable -j ACCEPT
 -A INPUT -p icmp --icmp-type time-exceeded -j ACCEPT
 
-# Allow docker to other interfaces
-#-A INPUT -i docker0 -j ACCEPT
-
 # Allow docker forwarding
 -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -i any -o docker0 -j ACCEPT
--A FORWARD -i docker0 -o !docker0 -j ACCEPT
+-A FORWARD -i docker0 -o any -j ACCEPT
 
 # Accept Pings
 -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
