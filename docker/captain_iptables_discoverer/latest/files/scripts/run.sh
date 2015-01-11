@@ -24,8 +24,8 @@ read -r -d '' iptables_default_rules_start << EOM || true
 -A INPUT -i docker0 -j ACCEPT
 
 # Allow docker forwarding
--A FORWARD -i docker0 -o eth0 -j ACCEPT
--A FORWARD -i docker0 -o eth1 -j ACCEPT
+-A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -i any -o docker0 -j ACCEPT
+-A FORWARD -i docker0 -o !docker -j ACCEPT
 
 # Accept Pings
 -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
