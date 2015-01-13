@@ -13,10 +13,10 @@ write_container_environment_file () {
   create_empty_file "$FILE_PATH" "$FILE_NAME"
 
   # get all public ips
-  local etcd_tree="$(get_tree $ETCD_BASE_PATH)"
+  local etcd_tree="$(get_etcd_tree $ETCD_BASE_PATH)"
   local public_ips="$(echo $etcd_tree | $dir/jq '.nodes[] as $av_zones | $av_zones.nodes[] | select(.key | contains("/containers")) | .nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_public_ip")) | .key + "=" + .value')"
   # get private ips and ports from this zone
-  local etcd_tree="$(get_tree $ETCD_CURRENT_AVZONE_PATH)"
+  local etcd_tree="$(get_etcd_tree $ETCD_CURRENT_AVZONE_PATH)"
   local private_ips="$(echo $etcd_tree | $dir/jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_private_ip")) | .key + "=" + .value')"
   local ports="$(echo $etcd_tree | $dir/jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/port")) | .key + "=" + .value')"
   
@@ -101,21 +101,20 @@ write_container_environment_file () {
 watch_container_environment_file () {
   local end_loop=false
   local current_file="$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
-  current_env="$(/usr/bin/stat -c%s $current_file)"
+  current_env="$(cat $current_file | sort)"
   while [[ "$end_loop" != true ]]; do
-    # Now comparing on file size, because lines can shuffle per file. Should fix it by reading lines and comparing
     FILE_NAME="environment_watch"
     write_container_environment_file
     local new_file="$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
-    new_env="$(/usr/bin/stat -c%s $new_file)"
-    if [[ "$current_env" != "$new_env" && "$new_env" != "0" ]]; then
+    new_env="$(cat $new_file | sort)"
+    if [[ "$current_env" != "$new_env" && ! -z "$new_env" ]]; then
       echo "new environment file is different..."
-      current_need_restart_value="$(get_value $NEED_RESTART_KEY)"
+      current_need_restart_value="$(get_etcd_value $NEED_RESTART_KEY)"
       if [[ current_need_restart_value == "1" ]]; then
         echo "$NEED_RESTART_KEY is already 1, doing nothing..."
       else
         echo "setting $NEED_RESTART_KEY to 1"
-        echo "$(set_value $NEED_RESTART_KEY 1)"
+        echo "$(set_etcd_value $NEED_RESTART_KEY 1)"
         end_loop=true
       fi
     fi

@@ -11,7 +11,7 @@ etcd_curl_base_path="/v2/keys/"
 
 # $1: file
 # $2: max_age_seconds
-# 0 if not older and 1 if older
+# return: 0 if not older and 1 if older or non existant
 file_older_than_seconds () {
   local file="$1"
   local max_age_seconds="$2"
@@ -29,7 +29,7 @@ file_older_than_seconds () {
 }
 
 # $1: etcd path
-get_tree () {
+get_etcd_tree () {
   set -e
   local etcd_path="$1"
 
@@ -63,31 +63,31 @@ get_tree () {
 }
 
 # $1: etcd key
-get_value () {
+get_etcd_value () {
   set -e
   etcd_key="$1"
   etcd_path="/"
-  local etcd_tree="$(get_tree $etcd_path)"
+  local etcd_tree="$(get_etcd_tree $etcd_path)"
   local quoted_result="$(echo $etcd_tree | $dir/jq 'recurse(.nodes[]?) | select(.key | contains("'"$etcd_key"'")) | .value')"
   echo ${quoted_result//\"/}
 }
 
 # $1: etcd path
-# $2: short etcd key
+# $2: partial etcd key
 # $3: etcd value
-get_keys_from_short_key_with_value () {
+get_etcd_keys_from_partial_key_with_value () {
   set -e
   local etcd_path="$1"
-  local short_etcd_key="$2"
+  local partial_etcd_key="$2"
   local etcd_value="$3"
-  local etcd_tree="$(get_tree $etcd_path)"
-  local quoted_keys="$(echo $etcd_tree | $dir/jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$short_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .key')"
+  local etcd_tree="$(get_etcd_tree $etcd_path)"
+  local quoted_keys="$(echo $etcd_tree | $dir/jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$partial_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .key')"
   local keys=${quoted_keys//\"/}
   echo "$keys"
 }
 
 # $1: app key
-get_app_path_from_app_key () {
+get_etcd_app_path_from_app_key () {
   set -e
   local app_key="$1"
   local result="$(echo $app_key | awk -F'/' '{print "/"$2"/"$3"/"$4"/"$5}')"
@@ -95,21 +95,21 @@ get_app_path_from_app_key () {
 }
 
 # $1: etcd path
-# $2: short etcd key
+# $2: partial etcd key
 # $3: etcd value
-count_keys_with_value_for_app () {
+count_etcd_keys_with_value_for_app () {
   local etcd_path="$1"
-  local short_etcd_key="$2"
+  local partial_etcd_key="$2"
   local etcd_value="$3"
-  local etcd_tree="$(get_tree $etcd_path)"
-  local result="$(echo $etcd_tree | $dir/jq '.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$short_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .value' | wc -l)"
+  local etcd_tree="$(get_etcd_tree $etcd_path)"
+  local result="$(echo $etcd_tree | $dir/jq '.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$partial_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .value' | wc -l)"
   echo "$result"
 }
 
 # $1: etcd key
 # $2: etcd value
 # $3: etcd ttl
-set_value () {
+set_etcd_value () {
   set -e
   etcd_key="$1"
   etcd_value="$2"
