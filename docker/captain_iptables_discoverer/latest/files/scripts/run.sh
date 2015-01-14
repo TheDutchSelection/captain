@@ -117,7 +117,7 @@ extra_rules () {
 
   # every extra rule env starts with IPTABLES_RULE
   while read -r env; do
-    if [[ $env == "IPTABLES_RULE_"* ]]; then
+    if [[ "$env" == "IPTABLES_RULE_"* ]]; then
       local extra_rule=$(echo "$env" | awk -F'=' '{print $2}')
       local extra_rule="$extra_rule"$'\n'
       local extra_rules="$extra_rules$extra_rule"
@@ -183,37 +183,37 @@ write_iptables_rules_file () {
 
   create_empty_file "$file_path" "$file_name"
 
-#  local public_ips=$(get_all_public_ips)
-#  local private_ips=$(get_private_ips)
-#  local container_ips_with_keys=$(get_container_ips_with_keys)
-#  local public_ip_rules=$(trusted_ip_rules "$public_ips")
-#  local private_ip_rules=$(trusted_ip_rules "$private_ips")
-#  local container_nat_rules=$(docker_nat_rules "$container_ips_with_keys")
-#  local extra_rules=$(extra_rules)
+  local public_ips=$(get_all_public_ips)
+  local private_ips=$(get_private_ips)
+  local container_ips_with_keys=$(get_container_ips_with_keys)
+  local public_ip_rules=$(trusted_ip_rules "$public_ips")
+  local private_ip_rules=$(trusted_ip_rules "$private_ips")
+  local container_nat_rules=$(docker_nat_rules "$container_ips_with_keys")
+  local extra_rules=$(extra_rules)
 
   # put all together
-  local complete_file_path=$(get_file_path_including_file_name "$file_path $file_name")
+  local complete_file_path=$(get_file_path_including_file_name "$file_path" "$file_name")
   echo "$iptables_filter_rules_start"$'\n' >> "$complete_file_path"
-#  if [[ ! -z "$public_ip_rules" ]]; then
-#    echo "# public ip lines" >> "$complete_file_path"
-#    echo "$public_ip_rules" >> "$complete_file_path"
-#  fi
-#  if [[ ! -z "$private_ip_rules" ]]; then
-#    echo "# private ip lines" >> "$complete_file_path"
-#    echo "$private_ip_rules" >> "$complete_file_path"
-#  fi
-#  if [[ ! -z "$extra_rules" ]]; then
-#    echo "# extra lines" >> "$complete_file_path"
-#    echo "$extra_rules" >> "$complete_file_path"
-#  fi
-#  echo "$iptables_filter_rules_end" >> "$complete_file_path"
-#
-#  echo "$iptables_nat_rules_start"$'\n' >> "$complete_file_path"
-#  if [[ ! -z "$container_nat_rules" ]]; then
-#    echo "# container ip and port nat lines" >> "$complete_file_path"
-#    echo "$container_nat_rules" >> "$complete_file_path"
-#  fi
-#  echo "$iptables_nat_rules_end" >> "$complete_file_path"
+  if [[ ! -z "$public_ip_rules" ]]; then
+    echo "# public ip lines" >> "$complete_file_path"
+    echo "$public_ip_rules" >> "$complete_file_path"
+  fi
+  if [[ ! -z "$private_ip_rules" ]]; then
+    echo "# private ip lines" >> "$complete_file_path"
+    echo "$private_ip_rules" >> "$complete_file_path"
+  fi
+  if [[ ! -z "$extra_rules" ]]; then
+    echo "# extra lines" >> "$complete_file_path"
+    echo "$extra_rules" >> "$complete_file_path"
+  fi
+  echo "$iptables_filter_rules_end" >> "$complete_file_path"
+
+  echo "$iptables_nat_rules_start"$'\n' >> "$complete_file_path"
+  if [[ ! -z "$container_nat_rules" ]]; then
+    echo "# container ip and port nat lines" >> "$complete_file_path"
+    echo "$container_nat_rules" >> "$complete_file_path"
+  fi
+  echo "$iptables_nat_rules_end" >> "$complete_file_path"
 }
 
 # $1: file path
