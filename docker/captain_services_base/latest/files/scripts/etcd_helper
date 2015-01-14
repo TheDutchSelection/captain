@@ -111,9 +111,9 @@ count_etcd_keys_with_value_for_app () {
 # $3: etcd ttl
 set_etcd_value () {
   set -e
-  etcd_key="$1"
-  etcd_value="$2"
-  etcd_ttl="$3"
+  local etcd_key="$1"
+  local etcd_value="$2"
+  local etcd_ttl="$3"
 
   local etcd_curl_base_path_without_slash=${etcd_curl_base_path%/}
 
@@ -124,4 +124,38 @@ set_etcd_value () {
   fi
 
   echo "$result"
+}
+
+# $1: etcd other key
+# $2: etcd partial other key
+# $3: etcd partial key
+get_etcd_value_from_other_key () {
+  set -e
+  local other_key="$1"
+  local partial_other_key="$2"
+  local partial_key="$3"
+
+  local key=${other_key/"$partial_other_key"/"$partial_key"}
+  local value=$(get_etcd_value "$key")
+
+  echo "$value"
+}
+
+# $1: etcd other key
+# $2: etcd partial other key
+# $3: etcd partial key
+# $4: etcd value
+set_etcd_value_from_other_key () {
+  set -e
+  local other_key="$1"
+  local partial_other_key="$2"
+  local partial_key="$3"
+  local value="$4"
+
+  local key=${other_key/"$partial_other_key"/"$partial_key"}
+  local current_value=$(get_etcd_value "$key")
+
+  if [[ "$current_value" != "$value" ]]; then
+    set_etcd_value "$key" "$value"
+  fi
 }
