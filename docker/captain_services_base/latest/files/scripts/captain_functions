@@ -28,7 +28,7 @@ create_empty_file () {
   local file_path="$1"
   local file_name="$2"
   mkdir -p "$file_path"
-  cat /dev/null > "$(get_file_path_including_file_name $file_path $file_name)"
+  cat /dev/null > $(get_file_path_including_file_name "$file_path" "$file_name")
 }
 
 # $1: etcd_key_value (ie. /tds/doa3/containers/test/1/key="aap")
@@ -40,10 +40,10 @@ create_env_from_etcd_key_value () {
 
   local stripped_etcd_key_value=${etcd_key_value/"$strip"/}
   local stripped_etcd_key_value_unquoted=${stripped_etcd_key_value//\"/}
-  local key="$(echo $stripped_etcd_key_value_unquoted | awk -F'=' '{print $1}')"
-  local value="$(echo $stripped_etcd_key_value_unquoted | awk -F'=' '{print $2}')"
+  local key=$(echo "$stripped_etcd_key_value_unquoted" | awk -F'=' '{print $1}')
+  local value=$(echo "$stripped_etcd_key_value_unquoted" | awk -F'=' '{print $2}')
 
-  local key="$(echo $key | awk '{print toupper($0)}')"
+  local key=$(echo "$key" | awk '{print toupper($0)}')
   local key=${key//\//_}
   local key=${key//\-/_}
   echo "$key=$value"
@@ -56,7 +56,7 @@ create_etcd_key_from_env () {
   env_key="$1"
   etcd_base_path="$2"
   local key=${env_key/ETCD_VALUE_/}
-  local key="$(echo $key | awk '{print tolower($0)}')"
+  local key=$(echo "$key" | awk '{print tolower($0)}')
   local key="$etcd_base_path$key"
 
   echo "$key"

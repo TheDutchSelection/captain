@@ -15,8 +15,8 @@ get_max_restarts_for_app () {
 
   for app_exception in $APP_EXCEPTIONS
   do
-    local partial_etcd_key="$(echo $app_exception | awk -F'##' '{print $1}')"
-    local max_restart_value="$(echo $app_exception | awk -F'##' '{print $2}')"
+    local partial_etcd_key=$(echo "$app_exception" | awk -F'##' '{print $1}')
+    local max_restart_value=$(echo "$app_exception" | awk -F'##' '{print $2}')
     if [[ "/$partial_etcd_key" == *"$etcd_app_path"* ]]; then
       max_restarts="$max_restart_value"
       break
@@ -46,10 +46,10 @@ set_restart_values_from_need_restart_keys () {
 
   while read -r need_restart_key; do
     if [[ ! -z "$need_restart_key" ]]; then
-      local relevant_etcd_app_path="$(get_etcd_app_path_from_app_key $need_restart_key)"
-      local current_restarts="$(count_etcd_keys_with_value_for_app $relevant_etcd_app_path $restart_key $restart_value)"
-      local max_restarts="$(get_max_restarts_for_app $relevant_etcd_app_path)"
-      local current_update_value="$(get_etcd_value_from_other_key $need_restart_key $partial_need_restart_key $partial_update_key)"
+      local relevant_etcd_app_path=$(get_etcd_app_path_from_app_key "$need_restart_key")
+      local current_restarts=$(count_etcd_keys_with_value_for_app "$relevant_etcd_app_path" "$restart_key" "$restart_value")
+      local max_restarts=$(get_max_restarts_for_app "$relevant_etcd_app_path")
+      local current_update_value=$(get_etcd_value_from_other_key "$need_restart_key" "$partial_need_restart_key" "$partial_update_key")
 
       if [[ "$max_restarts" > "$current_restarts" ]]; then
         if [[ "$current_update_value" = "$update_value" ]]; then
@@ -67,17 +67,17 @@ set_restart_values_from_need_restart_keys () {
   echo "$result"
 }
 
-partial_need_restart_key="$(echo $ETCD_NEED_RESTART_KEY_VALUE | awk -F'##' '{print $1}')"
-need_restart_value="$(echo $ETCD_NEED_RESTART_KEY_VALUE | awk -F'##' '{print $2}')"
-partial_update_key="$(echo $ETCD_UPDATE_KEY_VALUE | awk -F'##' '{print $1}')"
-update_value="$(echo $ETCD_UPDATE_KEY_VALUE | awk -F'##' '{print $2}')"
-partial_restart_key="$(echo $ETCD_RESTART_KEY_VALUE | awk -F'##' '{print $1}')"
-restart_value="$(echo $ETCD_RESTART_KEY_VALUE | awk -F'##' '{print $2}')"
+partial_need_restart_key=$(echo "$ETCD_NEED_RESTART_KEY_VALUE" | awk -F'##' '{print $1}')
+need_restart_value=$(echo "$ETCD_NEED_RESTART_KEY_VALUE" | awk -F'##' '{print $2}')
+partial_update_key=$(echo "$ETCD_UPDATE_KEY_VALUE" | awk -F'##' '{print $1}')
+update_value=$(echo "$ETCD_UPDATE_KEY_VALUE" | awk -F'##' '{print $2}')
+partial_restart_key=$(echo "$ETCD_RESTART_KEY_VALUE" | awk -F'##' '{print $1}')
+restart_value=$(echo "$ETCD_RESTART_KEY_VALUE" | awk -F'##' '{print $2}')
 
 echo "get $partial_need_restart_key where value is $need_restart_value every $REFRESH_TIME seconds..."
 while true; do
-  need_restart_keys="$(get_etcd_keys_from_partial_key_with_value $ETCD_BASE_PATH $partial_need_restart_key $need_restart_value)"
+  need_restart_keys=$(get_etcd_keys_from_partial_key_with_value "$ETCD_BASE_PATH" "$partial_need_restart_key" "$need_restart_value")
 
-  echo "$(set_restart_values_from_need_restart_keys $need_restart_keys $partial_need_restart_key $partial_update_key $update_value $partial_restart_key $restart_value)"
+  echo $(set_restart_values_from_need_restart_keys "$need_restart_keys" "$partial_need_restart_key" "$partial_update_key" "$update_value" "$partial_restart_key" "$restart_value")
   sleep "$REFRESH_TIME"
 done

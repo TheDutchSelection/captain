@@ -47,10 +47,10 @@ get_etcd_tree () {
 
   local file="$ETCD_CACHE_FILE"
   local max_cache_seconds="$ETCD_CACHE_SECONDS"
-  local file_to_old_or_non_existant="$(file_older_than_seconds $file $max_cache_seconds)"
+  local file_to_old_or_non_existant=$(file_older_than_seconds "$file" "$max_cache_seconds")
 
   if [[ "$file_to_old_or_non_existant" == "1" ]]; then
-    local etcd_tree="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path?recursive=true)"
+    local etcd_tree=$(curl -s --key "$ETCD_CERTIFICATE_KEY" --cert "$ETCD_CERTIFICATE" --cacert "$ETCD_CA_CERTIFICATE" -L "$ETCD_ENDPOINT""$etcd_curl_base_path"?recursive=true)
     local temp_file="$file""_$RANDOM"
     echo "$etcd_tree" > "$temp_file"
     mv "$temp_file" "$file"
@@ -67,8 +67,8 @@ get_etcd_value () {
   set -e
   etcd_key="$1"
   etcd_path="/"
-  local etcd_tree="$(get_etcd_tree $etcd_path)"
-  local quoted_result="$(echo $etcd_tree | $dir/jq 'recurse(.nodes[]?) | select(.key | contains("'"$etcd_key"'")) | .value')"
+  local etcd_tree=$(get_etcd_tree "$etcd_path")
+  local quoted_result=$(echo "$etcd_tree" | "$dir"/jq 'recurse(.nodes[]?) | select(.key | contains("'"$etcd_key"'")) | .value')
   echo ${quoted_result//\"/}
 }
 
@@ -80,8 +80,8 @@ get_etcd_keys_from_partial_key_with_value () {
   local etcd_path="$1"
   local partial_etcd_key="$2"
   local etcd_value="$3"
-  local etcd_tree="$(get_etcd_tree $etcd_path)"
-  local quoted_keys="$(echo $etcd_tree | $dir/jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$partial_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .key')"
+  local etcd_tree=$(get_etcd_tree "$etcd_path")
+  local quoted_keys=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$partial_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .key')
   local keys=${quoted_keys//\"/}
   echo "$keys"
 }
@@ -90,7 +90,7 @@ get_etcd_keys_from_partial_key_with_value () {
 get_etcd_app_path_from_app_key () {
   set -e
   local app_key="$1"
-  local result="$(echo $app_key | awk -F'/' '{print "/"$2"/"$3"/"$4"/"$5}')"
+  local result=$(echo "$app_key" | awk -F'/' '{print "/"$2"/"$3"/"$4"/"$5}')
   echo "$result"
 }
 
@@ -101,8 +101,8 @@ count_etcd_keys_with_value_for_app () {
   local etcd_path="$1"
   local partial_etcd_key="$2"
   local etcd_value="$3"
-  local etcd_tree="$(get_etcd_tree $etcd_path)"
-  local result="$(echo $etcd_tree | $dir/jq '.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$partial_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .value' | wc -l)"
+  local etcd_tree=$(get_etcd_tree "$etcd_path")
+  local result=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$partial_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .value' | wc -l)
   echo "$result"
 }
 
@@ -118,9 +118,9 @@ set_etcd_value () {
   local etcd_curl_base_path_without_slash=${etcd_curl_base_path%/}
 
   if [[ -z "$etcd_ttl" ]]; then
-    result="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path_without_slash$etcd_key -XPUT -d value=$etcd_value)"
+    result=$(curl -s --key "$ETCD_CERTIFICATE_KEY" --cert "$ETCD_CERTIFICATE" --cacert "$ETCD_CA_CERTIFICATE" -L "$ETCD_ENDPOINT""$etcd_curl_base_path_without_slash""$etcd_key" -XPUT -d value="$etcd_value")
   else
-    result="$(curl -s --key $ETCD_CERTIFICATE_KEY --cert $ETCD_CERTIFICATE --cacert $ETCD_CA_CERTIFICATE -L $ETCD_ENDPOINT$etcd_curl_base_path_without_slash$etcd_key -XPUT -d value=$etcd_value -d ttl=$etcd_ttl)"
+    result=$(curl -s --key "$ETCD_CERTIFICATE_KEY" --cert "$ETCD_CERTIFICATE" --cacert "$ETCD_CA_CERTIFICATE" -L "$ETCD_ENDPOINT""$etcd_curl_base_path_without_slash""$etcd_key" -XPUT -d value="$etcd_value" -d ttl="$etcd_ttl")
   fi
 
   echo "$result"
