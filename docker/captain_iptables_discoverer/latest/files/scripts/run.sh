@@ -174,9 +174,14 @@ get_container_ips_with_keys () {
   echo "$container_ips_with_keys"
 }
 
+# $1: file path
+# $1: file name
 write_iptables_rules_file () {
   set -e
-  create_empty_file "$FILE_PATH" "$FILE_NAME"
+  local file_path="$1"
+  local file_name="$2"
+
+  create_empty_file "$file_path" "$file_name"
 
   local public_ips="$(get_all_public_ips)"
   local private_ips="$(get_private_ips)"
@@ -187,7 +192,7 @@ write_iptables_rules_file () {
   local extra_rules="$(extra_rules)"
 
   # put all together
-  local complete_file_path="$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
+  local complete_file_path="$(get_file_path_including_file_name $file_path $file_name)"
   echo "$iptables_filter_rules_start"$'\n' >> "$complete_file_path"
   if [[ ! -z "$public_ip_rules" ]]; then
     echo "# public ip lines" >> "$complete_file_path"
@@ -211,17 +216,24 @@ write_iptables_rules_file () {
   echo "$iptables_nat_rules_end" >> "$complete_file_path"
 }
 
+# $1: file path
+# $1: file name
 watch_iptables_rules_file () {
+  set -e
+  local file_path="$1"
+  local file_name="$2"
+
   local end_loop=false
-  local current_file="$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
-  current_rules="$(cat $current_file | sort)"
+  local current_file="$(get_file_path_including_file_name $file_path $file_name)"
+  local current_rules="$(cat $current_file | sort)"
+
   while [[ "$end_loop" != true ]]; do
-    FILE_NAME="iptable_rules_watch"
-    write_iptables_rules_file
-    local new_file="$(get_file_path_including_file_name $FILE_PATH $FILE_NAME)"
-    new_rules="$(cat $new_file | sort)"
+    file_name_watch="$file_name""_watch"
+    write_iptables_rules_file "$file_path" "$file_name_watch"
+    local new_file="$(get_file_path_including_file_name $file_path $file_name_watch)"
+    local new_rules="$(cat $new_file | sort)"
     if [[ "$current_rules" != "$new_rules" && ("$new_rules" == *"private ip lines"* || "$new_rules" == *"public ip lines"*) ]]; then
-      end_loop=true
+      local end_loop=true
     fi
     sleep "$REFRESH_TIME"
   done
@@ -229,8 +241,8 @@ watch_iptables_rules_file () {
 
 if [[ "$MODE" == "init" ]]; then
   echo "writing iptables rules file at $(get_file_path_including_file_name $FILE_PATH $FILE_NAME)..."
-  write_iptables_rules_file
+  write_iptables_rules_file "$FILE_PATH" "$FILE_NAME"
 else
   echo "watching changes for iptables rules file at $(get_file_path_including_file_name $FILE_PATH $FILE_NAME)..."
-  watch_iptables_rules_file
+  watch_iptables_rules_file "$FILE_PATH" "$FILE_NAME"
 fi
