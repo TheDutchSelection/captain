@@ -69,7 +69,7 @@ write_container_environment_file () {
   local file_path="$1"
   local file_name="$2"
   
-  create_empty_file "$FILE_PATH" "$FILE_NAME"
+  create_empty_file "$file_path" "$file_name"
 
   local public_ip_key_values=$(get_all_public_ips)
   local private_ip_key_values=$(get_private_ips)
@@ -103,7 +103,7 @@ watch_container_environment_file () {
   local current_rules=$(cat "$current_file" | sort)
 
   while [[ "$end_loop" != true ]]; do
-    file_name_watch="$file_name""_watch"
+    local file_name_watch="$file_name""_watch"
     write_container_environment_file "$file_path" "$file_name_watch"
     local new_file=$(get_file_path_including_file_name "$file_path" "$file_name_watch")
     local new_env=$(cat "$new_file" | sort)
