@@ -59,7 +59,8 @@ set_restart_values_from_need_restart_keys () {
           set_etcd_value_from_other_key "$need_restart_key" "$partial_need_restart_key" "$partial_restart_key" "$restart_value"
         fi
       else
-        local result="$result"$'\n'"$need_restart_key - max restarts reached"
+        local result="$result"$'\n'"$need_restart_key - max restarts ($max_restarts) reached (currently restarting: $current_restarts)"
+        local result="$result"$'\n'"partial_need_restart_key: $partial_need_restart_key"$'\n'"partial_update_key: $partial_update_key"$'\n'"update_value: $update_value"$'\n'"partial_restart_key: $partial_restart_key"$'\n'"restart_value: $restart_value"
       fi
     fi
   done <<< "$need_restart_keys"
