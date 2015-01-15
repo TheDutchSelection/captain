@@ -102,7 +102,7 @@ count_etcd_keys_with_value_for_app () {
   local partial_etcd_key="$2"
   local etcd_value="$3"
   local etcd_tree=$(get_etcd_tree "$etcd_path")
-  local result=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$partial_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .value' | wc -l)
+  local result=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$partial_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .value')
   echo "$result"
 }
 
