@@ -74,14 +74,21 @@ docker_nat_rules () {
       local container_ip_key=$(echo "$container_ip_with_key" | awk -F'=' '{print $1}')
       local container_ip=$(echo "$container_ip_with_key" | awk -F'=' '{print $2}')
       local container_port_key=${container_ip_with_key/container_ip/container_port}
+      local container_port_extra_key=${container_ip_with_key/container_ip/container_port_extra}
       local container_port_peer_key=${container_ip_with_key/container_ip/container_port_peer}
       local container_port_data_sync_key=${container_ip_with_key/container_ip/container_port_data_sync}
       local container_port=$(get_etcd_value "$container_port_key")
+      local container_port_extra=$(get_etcd_value "$container_port_extra_key")
       local container_port_peer=$(get_etcd_value "$container_port_peer_key")
       local container_port_data_sync=$(get_etcd_value "$container_port_data_sync_key")
       
       if [[ ! -z "$container_port" ]]; then
         local nat_rule=$(docker_nat_rule "$container_ip" "$container_port")
+        local nat_rules="$nat_rules$nat_rule"
+      fi
+
+      if [[ ! -z "$container_port_extra" ]]; then
+        local nat_rule=$(docker_nat_rule "$container_ip" "$container_port_extra")
         local nat_rules="$nat_rules$nat_rule"
       fi
       
