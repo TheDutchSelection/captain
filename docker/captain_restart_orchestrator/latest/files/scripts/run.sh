@@ -56,6 +56,7 @@ set_restart_values_from_need_restart_keys () {
           local result="$result""$need_restart_key - currently updating"" | "
         else
           local result="$result""$need_restart_key - set $partial_restart_key to $restart_value"" | "
+          local result="$result"$'\n'"partial_need_restart_key: $partial_need_restart_key"$'\n'"partial_update_key: $partial_update_key"$'\n'"update_value: $update_value"$'\n'"partial_restart_key: $partial_restart_key"$'\n'"restart_value: $restart_value"$'\n'"relevant_etcd_app_path: $relevant_etcd_app_path"
           set_etcd_value_from_other_key "$need_restart_key" "$partial_need_restart_key" "$partial_restart_key" "$restart_value"
         fi
       else
