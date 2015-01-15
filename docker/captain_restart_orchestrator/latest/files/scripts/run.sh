@@ -42,31 +42,29 @@ set_restart_values_from_need_restart_keys () {
   local partial_restart_key="$5"
   local restart_value="$6"
 
-  local result=""
+  local result=()
 
   while read -r need_restart_key; do
     if [[ ! -z "$need_restart_key" ]]; then
       local relevant_etcd_app_path=$(get_etcd_app_path_from_app_key "$need_restart_key")
-      local current_restarts=$(count_etcd_keys_with_value_for_app "$relevant_etcd_app_path" "$restart_key" "$restart_value")
+      local current_restarts=$(count_etcd_keys_with_value_for_app "$relevant_etcd_app_path" "$partial_restart_key" "$restart_value")
       local max_restarts=$(get_max_restarts_for_app "$relevant_etcd_app_path")
       local current_update_value=$(get_etcd_value_from_other_key "$need_restart_key" "$partial_need_restart_key" "$partial_update_key")
 
       if [[ "$max_restarts" > "$current_restarts" ]]; then
         if [[ "$current_update_value" = "$update_value" ]]; then
-          local result="$result""$need_restart_key - currently updating"" | "
+          local result=("${result[@]}" "$need_restart_key - currently updating")
         else
-          local result="$result""$need_restart_key - set $partial_restart_key to $restart_value"" | "
-          local result="$result"$'\n'"partial_need_restart_key: $partial_need_restart_key"$'\n'"partial_update_key: $partial_update_key"$'\n'"update_value: $update_value"$'\n'"partial_restart_key: $partial_restart_key"$'\n'"restart_value: $restart_value"$'\n'"relevant_etcd_app_path: $relevant_etcd_app_path"" max_restarts: $max_restarts"" current_restarts: $current_restarts"
-          # set_etcd_value_from_other_key "$need_restart_key" "$partial_need_restart_key" "$partial_restart_key" "$restart_value"
+          local result=("${result[@]}" "$need_restart_key - set $partial_restart_key to $restart_value")
+          set_etcd_value_from_other_key "$need_restart_key" "$partial_need_restart_key" "$partial_restart_key" "$restart_value"
         fi
       else
-        local result="$result""$need_restart_key - max restarts ($max_restarts) reached (currently restarting: $current_restarts)"" | "
-        local result="$result"$'\n'"partial_need_restart_key: $partial_need_restart_key"$'\n'"partial_update_key: $partial_update_key"$'\n'"update_value: $update_value"$'\n'"partial_restart_key: $partial_restart_key"$'\n'"restart_value: $restart_value"$'\n'"relevant_etcd_app_path: $relevant_etcd_app_path"
+        local result=("${result[@]}" "$need_restart_key - max restarts ($max_restarts) reached (currently restarting: $current_restarts)")
       fi
     fi
   done <<< "$need_restart_keys"
 
-  echo "$result"
+  echo ${result[@]}
 }
 
 partial_need_restart_key=$(echo "$ETCD_NEED_RESTART_KEY_VALUE" | awk -F'##' '{print $1}')
