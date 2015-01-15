@@ -53,14 +53,14 @@ set_restart_values_from_need_restart_keys () {
 
       if [[ "$max_restarts" > "$current_restarts" ]]; then
         if [[ "$current_update_value" = "$update_value" ]]; then
-          local result="$result"$'\n'"$need_restart_key - currently updating"
+          local result="$result""$need_restart_key - currently updating"" | "
         else
-          local result="$result"$'\n'"$need_restart_key - set $partial_restart_key to $restart_value"
+          local result="$result""$need_restart_key - set $partial_restart_key to $restart_value"" | "
           set_etcd_value_from_other_key "$need_restart_key" "$partial_need_restart_key" "$partial_restart_key" "$restart_value"
         fi
       else
-        local result="$result"$'\n'"$need_restart_key - max restarts ($max_restarts) reached (currently restarting: $current_restarts)"
-        local result="$result"$'\n'"partial_need_restart_key: $partial_need_restart_key"$'\n'"partial_update_key: $partial_update_key"$'\n'"update_value: $update_value"$'\n'"partial_restart_key: $partial_restart_key"$'\n'"restart_value: $restart_value"
+        local result="$result""$need_restart_key - max restarts ($max_restarts) reached (currently restarting: $current_restarts)"" | "
+        local result="$result"$'\n'"partial_need_restart_key: $partial_need_restart_key"$'\n'"partial_update_key: $partial_update_key"$'\n'"update_value: $update_value"$'\n'"partial_restart_key: $partial_restart_key"$'\n'"restart_value: $restart_value"$'\n'"relevant_etcd_app_path: $relevant_etcd_app_path"
       fi
     fi
   done <<< "$need_restart_keys"
