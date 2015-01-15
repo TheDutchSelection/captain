@@ -56,7 +56,7 @@ set_restart_values_from_need_restart_keys () {
           local result=("${result[@]}" "$need_restart_key - currently updating")
         else
           local result=("${result[@]}" "$need_restart_key - set $partial_restart_key to $restart_value")
-          set_etcd_value_from_other_key "$need_restart_key" "$partial_need_restart_key" "$partial_restart_key" "$restart_value"
+          local set_result=$(set_etcd_value_from_other_key "$need_restart_key" "$partial_need_restart_key" "$partial_restart_key" "$restart_value")
         fi
       else
         local result=("${result[@]}" "$need_restart_key - max restarts ($max_restarts) reached (currently restarting: $current_restarts)")
