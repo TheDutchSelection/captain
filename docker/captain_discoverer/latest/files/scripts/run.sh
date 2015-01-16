@@ -100,14 +100,14 @@ watch_container_environment_file () {
 
   local end_loop=false
   local current_file=$(get_file_path_including_file_name "$file_path" "$file_name")
-  local current_env=$(cat "$current_file" | sort)
+  local current_envs=$(cat "$current_file" | sort)
 
   while [[ "$end_loop" != true ]]; do
     local file_name_watch="$file_name""_watch"
     write_container_environment_file "$file_path" "$file_name_watch"
     local new_file=$(get_file_path_including_file_name "$file_path" "$file_name_watch")
-    local new_env=$(cat "$new_file" | sort)
-    if [[ "$current_env" != "$new_env" && ! -z "$new_env" ]]; then
+    local new_envs=$(cat "$new_file" | sort)
+    if [[ "$current_envs" != "$new_envs" && ! -z "$new_envs" ]]; then
       echo "new environment file is different..."
       current_need_restart_value=$(get_etcd_value "$NEED_RESTART_KEY")
       if [[ current_need_restart_value != "$NEED_RESTART_VALUE" ]]; then
