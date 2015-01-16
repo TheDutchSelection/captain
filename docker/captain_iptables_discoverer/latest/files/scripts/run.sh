@@ -113,7 +113,7 @@ docker_nat_rules () {
 docker_nat_rule () {
   local container_ip="$1"
   local container_port="$2"
-  local nat_rule="-A DOCKER ! -i docker0 -p tcp --dport $container_port -j DNAT --to-destination $container_ip:$container_port"$'\n'"-A DOCKER ! -i docker0 -p udp --dport $container_port -j DNAT --to-destination $container_ip:$container_port"
+  local nat_rule="-A DOCKER -p tcp --dport $container_port -j DNAT --to-destination $container_ip:$container_port"$'\n'"-A DOCKER -p udp --dport $container_port -j DNAT --to-destination $container_ip:$container_port"
 
   echo "$nat_rule"
 }
