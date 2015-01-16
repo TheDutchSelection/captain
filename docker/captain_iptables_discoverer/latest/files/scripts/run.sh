@@ -73,10 +73,10 @@ docker_nat_rules () {
       local container_ip_with_key=${container_ip_with_key//\"/}
       local container_ip_key=$(echo "$container_ip_with_key" | awk -F'=' '{print $1}')
       local container_ip=$(echo "$container_ip_with_key" | awk -F'=' '{print $2}')
-      local container_port_key=${container_ip_with_key/container_ip/container_port}
-      local container_port_extra_key=${container_ip_with_key/container_ip/container_port_extra}
-      local container_port_peer_key=${container_ip_with_key/container_ip/container_port_peer}
-      local container_port_data_sync_key=${container_ip_with_key/container_ip/container_port_data_sync}
+      local container_port_key=${container_ip_key/container_ip/container_port}
+      local container_port_extra_key=${container_ip_key/container_ip/container_port_extra}
+      local container_port_peer_key=${container_ip_key/container_ip/container_port_peer}
+      local container_port_data_sync_key=${container_ip_key/container_ip/container_port_data_sync}
       local container_port=$(get_etcd_value "$container_port_key")
       local container_port_extra=$(get_etcd_value "$container_port_extra_key")
       local container_port_peer=$(get_etcd_value "$container_port_peer_key")
@@ -105,8 +105,7 @@ docker_nat_rules () {
     fi
   done <<< "$container_ips_with_keys"
 
-  # echo "$nat_rules"
-  echo "container_ip_key: $container_ip_key container_ip: $container_ip container_port_key: $container_port_key"
+  echo "$nat_rules"
 }
 
 # $1: container_ip
