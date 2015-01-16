@@ -68,7 +68,7 @@ get_etcd_value () {
   etcd_key="$1"
   etcd_path="/"
   local etcd_tree=$(get_etcd_tree "$etcd_path")
-  local quoted_result=$(echo "$etcd_tree" | "$dir"/jq 'recurse(.nodes[]?) | select(.key | contains("'"$etcd_key"'")) | .value')
+  local quoted_result=$(echo "$etcd_tree" | "$dir"/jq 'recurse(.nodes[]?) | select(.key | . == "'"$etcd_key"'") | .value')
   echo ${quoted_result//\"/}
 }
 
