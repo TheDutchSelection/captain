@@ -70,7 +70,7 @@ docker_nat_rules () {
   while read -r container_ip_with_key; do
     if [[ ! -z "$container_ip_with_key" ]]; then
       # remove all double quotes
-      container_ip_with_key=${container_ip_with_key//\"/}
+      local container_ip_with_key=${container_ip_with_key//\"/}
       local container_ip_key=$(echo "$container_ip_with_key" | awk -F'=' '{print $1}')
       local container_ip=$(echo "$container_ip_with_key" | awk -F'=' '{print $2}')
       local container_port_key=${container_ip_with_key/container_ip/container_port}
@@ -106,7 +106,7 @@ docker_nat_rules () {
   done <<< "$container_ips_with_keys"
 
   # echo "$nat_rules"
-  echo "$container_ips_with_keys"
+  echo "container_ip_key: $container_ip_key container_ip: $container_ip container_port_key: $container_port_key"
 }
 
 # $1: container_ip
