@@ -100,7 +100,7 @@ watch_container_environment_file () {
 
   local end_loop=false
   local current_file=$(get_file_path_including_file_name "$file_path" "$file_name")
-  local current_rules=$(cat "$current_file" | sort)
+  local current_env=$(cat "$current_file" | sort)
 
   while [[ "$end_loop" != true ]]; do
     local file_name_watch="$file_name""_watch"
