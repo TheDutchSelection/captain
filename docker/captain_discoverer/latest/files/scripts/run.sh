@@ -33,7 +33,7 @@ get_ports () {
   if [[ ! -z "$ETCD_CURRENT_AVZONE_PATH" ]]; then
     local etcd_tree_path="$ETCD_CURRENT_AVZONE_PATH"
     local etcd_tree=$(get_etcd_tree "$etcd_tree_path")
-    local ports=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/port")) | .key + "=" + .value')
+    local ports=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_port")) | .key + "=" + .value')
   fi
 
   echo "$ports"
