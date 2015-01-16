@@ -105,7 +105,8 @@ docker_nat_rules () {
     fi
   done <<< "$container_ips_with_keys"
 
-  echo "$nat_rules"
+  # echo "$nat_rules"
+  echo "$container_ips_with_keys"
 }
 
 # $1: container_ip
