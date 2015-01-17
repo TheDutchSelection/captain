@@ -41,6 +41,9 @@ read -r -d '' iptables_filter_rules_start << EOM || true
 -A INPUT -p icmp --icmp-type time-exceeded -j ACCEPT
 -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
 
+# Allow incoming on docker0 from docker ips (happens when a container connects to itself via public/private host ip)
+-A INPUT -i docker0 -s 172.17.42.1/16 -j ACCEPT
+
 # Accept any established connections
 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
