@@ -112,11 +112,14 @@ watch_container_environment_file () {
       current_need_restart_value=$(get_etcd_value "$NEED_RESTART_KEY")
       if [[ current_need_restart_value != "$NEED_RESTART_VALUE" ]]; then
         set_etcd_value "$NEED_RESTART_KEY" "$NEED_RESTART_VALUE"
+        result="current envs: $current_envs, new envs: $new_envs"
         end_loop=true
       fi
     fi
     sleep "$REFRESH_TIME"
   done
+
+  echo "$result"
 }
 
 if [[ "$MODE" == "init" ]]; then
@@ -124,5 +127,6 @@ if [[ "$MODE" == "init" ]]; then
   write_container_environment_file "$FILE_PATH" "$FILE_NAME"
 else
   echo "watching changes for environment file at $(get_file_path_including_file_name $FILE_PATH $FILE_NAME)..."
-  watch_container_environment_file "$FILE_PATH" "$FILE_NAME"
+  watch_environment_result=$(watch_container_environment_file "$FILE_PATH" "$FILE_NAME")
+  echo "$watch_environment_result"
 fi
