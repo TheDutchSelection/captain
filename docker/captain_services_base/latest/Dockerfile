@@ -11,6 +11,8 @@
 FROM progrium/busybox
 MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>
 
+ADD files/opkg.conf /etc/opkg.conf
+
 RUN opkg-install curl bash coreutils-stat
 
 ADD files/scripts /usr/local/bin
