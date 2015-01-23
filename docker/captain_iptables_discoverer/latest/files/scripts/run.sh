@@ -198,8 +198,11 @@ write_iptables_rules_file () {
   local container_ips_with_keys=$(get_container_ips_with_keys)
   local public_ip_rules=$(trusted_ip_rules "$public_ips")
   local private_ip_rules=$(trusted_ip_rules "$private_ips")
-  local container_nat_rules=$(docker_nat_rules "$container_ips_with_keys")
   local extra_rules=$(extra_rules)
+
+  if [[ "$EXCLUDE_NAT_RULES" == "1" ]]; then
+    local container_nat_rules=$(docker_nat_rules "$container_ips_with_keys")
+  fi
 
   # put all together
   local complete_file_path=$(get_file_path_including_file_name "$file_path" "$file_name")
