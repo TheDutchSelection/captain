@@ -200,7 +200,7 @@ write_iptables_rules_file () {
   local private_ip_rules=$(trusted_ip_rules "$private_ips")
   local extra_rules=$(extra_rules)
 
-  if [[ "$EXCLUDE_NAT_RULES" == "1" ]]; then
+  if [[ "$EXCLUDE_NAT_RULES" != "1" ]]; then
     local container_nat_rules=$(docker_nat_rules "$container_ips_with_keys")
   fi
 
@@ -221,12 +221,14 @@ write_iptables_rules_file () {
   fi
   echo "$iptables_filter_rules_end" >> "$complete_file_path"
 
-  echo "$iptables_nat_rules_start"$'\n' >> "$complete_file_path"
-  if [[ ! -z "$container_nat_rules" ]]; then
-    echo "# container ip and port nat lines" >> "$complete_file_path"
-    echo "$container_nat_rules" >> "$complete_file_path"
+  if [[ "$EXCLUDE_NAT_RULES" != "1" ]]; then
+    echo "$iptables_nat_rules_start"$'\n' >> "$complete_file_path"
+    if [[ ! -z "$container_nat_rules" ]]; then
+      echo "# container ip and port nat lines" >> "$complete_file_path"
+      echo "$container_nat_rules" >> "$complete_file_path"
+    fi
+    echo "$iptables_nat_rules_end" >> "$complete_file_path"
   fi
-  echo "$iptables_nat_rules_end" >> "$complete_file_path"
 }
 
 # $1: file path
