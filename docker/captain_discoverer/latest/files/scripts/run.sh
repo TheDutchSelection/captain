@@ -71,23 +71,25 @@ write_container_environment_file () {
   
   create_empty_file "$file_path" "$file_name"
 
-  local public_ip_key_values=$(get_all_public_ips)
-  local private_ip_key_values=$(get_private_ips)
-  local port_key_values=$(get_ports)
-  local public_ip_envs=$(create_envs "$public_ip_key_values")
-  local private_ip_envs=$(create_envs "$private_ip_key_values")
-  local port_envs=$(create_envs "$port_key_values")
-  
-  # put all together
-  local complete_file_path=$(get_file_path_including_file_name "$file_path" "$file_name")
-  if [[ ! -z "$public_ip_envs" ]]; then
-    echo "$public_ip_envs" >> "$complete_file_path"
-  fi
-  if [[ ! -z "$private_ip_envs" ]]; then
-    echo "$private_ip_envs" >> "$complete_file_path"
-  fi
-  if [[ ! -z "$port_envs" ]]; then
-    echo "$port_envs" >> "$complete_file_path"
+  if [[ ! -z "$APP_KEYS" ]]; then
+    local public_ip_key_values=$(get_all_public_ips)
+    local private_ip_key_values=$(get_private_ips)
+    local port_key_values=$(get_ports)
+    local public_ip_envs=$(create_envs "$public_ip_key_values")
+    local private_ip_envs=$(create_envs "$private_ip_key_values")
+    local port_envs=$(create_envs "$port_key_values")
+
+    # put all together
+    local complete_file_path=$(get_file_path_including_file_name "$file_path" "$file_name")
+    if [[ ! -z "$public_ip_envs" ]]; then
+      echo "$public_ip_envs" >> "$complete_file_path"
+    fi
+    if [[ ! -z "$private_ip_envs" ]]; then
+      echo "$private_ip_envs" >> "$complete_file_path"
+    fi
+    if [[ ! -z "$port_envs" ]]; then
+      echo "$port_envs" >> "$complete_file_path"
+    fi
   fi
 }
 
