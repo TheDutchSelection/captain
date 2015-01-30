@@ -57,7 +57,7 @@ get_etcd_tree () {
   fi
 
   local file_content=$(<"$file")
-  local result=$(echo "$file_content" | "$dir"/jq '.node | recurse(.nodes[]?) | select(.key | . == "'"$etcd_path"'") | .')
+  local result=$(echo "$file_content" | jq '.node | recurse(.nodes[]?) | select(.key | . == "'"$etcd_path"'") | .')
 
   echo "$result"
 }
@@ -68,7 +68,7 @@ get_etcd_value () {
   etcd_key="$1"
   etcd_path="/"
   local etcd_tree=$(get_etcd_tree "$etcd_path")
-  local quoted_result=$(echo "$etcd_tree" | "$dir"/jq 'recurse(.nodes[]?) | select(.key | . == "'"$etcd_key"'") | .value')
+  local quoted_result=$(echo "$etcd_tree" | jq 'recurse(.nodes[]?) | select(.key | . == "'"$etcd_key"'") | .value')
   echo ${quoted_result//\"/}
 }
 
@@ -81,7 +81,7 @@ get_etcd_keys_from_partial_key_with_value () {
   local partial_etcd_key="$2"
   local etcd_value="$3"
   local etcd_tree=$(get_etcd_tree "$etcd_path")
-  local quoted_keys=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$partial_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .key')
+  local quoted_keys=$(echo "$etcd_tree" | jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$partial_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .key')
   local keys=${quoted_keys//\"/}
   echo "$keys"
 }
@@ -102,7 +102,7 @@ count_etcd_keys_with_value_for_app () {
   local partial_etcd_key="$2"
   local etcd_value="$3"
   local etcd_tree=$(get_etcd_tree "$etcd_path")
-  local result=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$partial_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .value' | wc -l)
+  local result=$(echo "$etcd_tree" | jq '.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$partial_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .value' | wc -l)
   echo "$result"
 }
 

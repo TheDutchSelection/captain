@@ -155,7 +155,7 @@ trusted_ip_rules () {
 
 get_all_public_ips () {
   local etcd_tree=$(get_etcd_tree "$ETCD_BASE_PATH")
-  local public_ips=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $av_zones | $av_zones.nodes[] | select(.key | contains("/hosts")) | .nodes[] as $hosts | $hosts.nodes[] as $keys | $keys | select(.key | contains("/public_ip")) | .value')
+  local public_ips=$(echo "$etcd_tree" | jq '.nodes[] as $av_zones | $av_zones.nodes[] | select(.key | contains("/hosts")) | .nodes[] as $hosts | $hosts.nodes[] as $keys | $keys | select(.key | contains("/public_ip")) | .value')
 
   echo "$public_ips"
 }
@@ -166,7 +166,7 @@ get_private_ips () {
   if [[ ! -z "$ETCD_CURRENT_AVZONE_PATH" ]]; then
     local etcd_tree_path="$ETCD_CURRENT_AVZONE_PATH""hosts/"
     local etcd_tree=$(get_etcd_tree "$etcd_tree_path")
-    local private_ips=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $hosts | $hosts.nodes[] as $keys | $keys | select(.key | contains("/private_ip")) | .value')
+    local private_ips=$(echo "$etcd_tree" | jq '.nodes[] as $hosts | $hosts.nodes[] as $keys | $keys | select(.key | contains("/private_ip")) | .value')
   fi
 
   echo "$private_ips"
@@ -178,7 +178,7 @@ get_container_ips_with_keys () {
   if [[ ! -z "$ETCD_CURRENT_AVZONE_PATH" && ! -z "$CURRENT_HOST" ]]; then
     local etcd_tree_path="$ETCD_CURRENT_AVZONE_PATH""containers/"
     local etcd_tree=$(get_etcd_tree "$etcd_tree_path")
-    local container_ips_with_keys=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $containers | $containers.nodes[] as $hosts | $hosts | select(.key | contains("/'"$CURRENT_HOST"'")) as $host | $host.nodes[] as $keys | $keys | select(.key | contains("/container_ip")) | .key + "=" + .value')
+    local container_ips_with_keys=$(echo "$etcd_tree" | jq '.nodes[] as $containers | $containers.nodes[] as $hosts | $hosts | select(.key | contains("/'"$CURRENT_HOST"'")) as $host | $host.nodes[] as $keys | $keys | select(.key | contains("/container_ip")) | .key + "=" + .value')
   fi
 
   echo "$container_ips_with_keys"

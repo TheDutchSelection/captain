@@ -10,7 +10,7 @@ if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
 
 get_all_public_ips () {
   local etcd_tree=$(get_etcd_tree "$ETCD_BASE_PATH")
-  local public_ips=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $av_zones | $av_zones.nodes[] | select(.key | contains("/containers")) | .nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_public_ip")) | .key + "=" + .value')
+  local public_ips=$(echo "$etcd_tree" | jq '.nodes[] as $av_zones | $av_zones.nodes[] | select(.key | contains("/containers")) | .nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_public_ip")) | .key + "=" + .value')
 
   echo "$public_ips"
 }
@@ -21,7 +21,7 @@ get_private_ips () {
   if [[ ! -z "$ETCD_CURRENT_AVZONE_PATH" ]]; then
     local etcd_tree_path="$ETCD_CURRENT_AVZONE_PATH"
     local etcd_tree=$(get_etcd_tree "$etcd_tree_path")
-    local private_ips=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_private_ip")) | .key + "=" + .value')
+    local private_ips=$(echo "$etcd_tree" | jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_private_ip")) | .key + "=" + .value')
   fi
 
   echo "$private_ips"
@@ -31,7 +31,7 @@ get_ports () {
   local ports=""
 
   local etcd_tree=$(get_etcd_tree "$ETCD_BASE_PATH")
-  local ports=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_port")) | .key + "=" + .value')
+  local ports=$(echo "$etcd_tree" | jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_port")) | .key + "=" + .value')
 
   echo "$ports"
 }
