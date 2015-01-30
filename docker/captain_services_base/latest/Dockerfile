@@ -8,12 +8,10 @@
 #
 # USAGE EXAMPLE:
 
-FROM progrium/busybox
+FROM gliderlabs/alpine:3.1
 MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>
 
-ADD files/opkg.conf /etc/opkg.conf
-
-RUN opkg-install curl bash coreutils-stat
+RUN apk-install curl bash
 
 ADD files/scripts /usr/local/bin
 
