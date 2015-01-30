@@ -30,11 +30,8 @@ get_private_ips () {
 get_ports () {
   local ports=""
 
-  if [[ ! -z "$ETCD_CURRENT_AVZONE_PATH" ]]; then
-    local etcd_tree_path="$ETCD_CURRENT_AVZONE_PATH"
-    local etcd_tree=$(get_etcd_tree "$etcd_tree_path")
-    local ports=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_port")) | .key + "=" + .value')
-  fi
+  local etcd_tree=$(get_etcd_tree "$ETCD_BASE_PATH")
+  local ports=$(echo "$etcd_tree" | "$dir"/jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_port")) | .key + "=" + .value')
 
   echo "$ports"
 }
@@ -49,7 +46,7 @@ create_envs () {
     for app_key in $APP_KEYS
     do
       if [[ "$etcd_key_value" == *"/$app_key"* && ( -z "$IGNORED_APP_KEY" || "$etcd_key_value" != *"$IGNORED_APP_KEY"*) ]]; then
-        env=$(create_env_from_etcd_key_value "$etcd_key_value" "$ETCD_CURRENT_AVZONE_PATH")
+        env=$(create_env_from_etcd_key_value "$etcd_key_value" "containers/")
         if [[ -z "$envs" ]]; then
           envs="$env"
         else

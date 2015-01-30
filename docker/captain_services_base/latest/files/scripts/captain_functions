@@ -38,7 +38,7 @@ create_env_from_etcd_key_value () {
   etcd_key_value="$1"
   strip="$2"
 
-  local stripped_etcd_key_value=${etcd_key_value/"$strip"/}
+  local stripped_etcd_key_value=${etcd_key_value#*"$strip"}
   local stripped_etcd_key_value_unquoted=${stripped_etcd_key_value//\"/}
   local key=$(echo "$stripped_etcd_key_value_unquoted" | awk -F'=' '{print $1}')
   local value=$(echo "$stripped_etcd_key_value_unquoted" | awk -F'=' '{print $2}')
