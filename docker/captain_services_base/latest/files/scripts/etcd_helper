@@ -72,20 +72,6 @@ get_etcd_value () {
   echo ${quoted_result//\"/}
 }
 
-# $1: etcd path
-# $2: partial etcd key
-# $3: etcd value
-get_etcd_keys_from_partial_key_with_value () {
-  set -e
-  local etcd_path="$1"
-  local partial_etcd_key="$2"
-  local etcd_value="$3"
-  local etcd_tree=$(get_etcd_tree "$etcd_path")
-  local quoted_keys=$(echo "$etcd_tree" | jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] as $keys | $keys | select(.key | contains("/'"$partial_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .key')
-  local keys=${quoted_keys//\"/}
-  echo "$keys"
-}
-
 # $1: app key
 get_etcd_app_path_from_app_key () {
   set -e

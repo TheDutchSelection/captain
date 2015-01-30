@@ -8,6 +8,19 @@ dir="${BASH_SOURCE%/*}"
 if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
 . "$dir/captain_functions"
 
+# $1: partial etcd key
+# $2: etcd value
+get_need_restart_keys_with_value () {
+  set -e
+  local partial_etcd_key="$1"
+  local etcd_value="$2"
+
+  local etcd_tree=$(get_etcd_tree "$ETCD_BASE_PATH")
+  local quoted_keys=$(echo "$etcd_tree" | jq '.nodes[] as $av_zones | $av_zones.nodes[] | select(.key | contains("/containers")) | .nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/'"$partial_etcd_key"'")) | select(.value | contains("'"$etcd_value"'")) | .key')
+  local keys=${quoted_keys//\"/}
+  echo "$keys"
+}
+
 # $1: etcd app path
 get_max_restarts_for_app () {
   local etcd_app_path="$1"
@@ -76,7 +89,7 @@ restart_value=$(echo "$ETCD_RESTART_KEY_VALUE" | awk -F'##' '{print $2}')
 
 echo "get $partial_need_restart_key where value is $need_restart_value every $REFRESH_TIME seconds..."
 while true; do
-  need_restart_keys=$(get_etcd_keys_from_partial_key_with_value "$ETCD_BASE_PATH" "$partial_need_restart_key" "$need_restart_value")
+  need_restart_keys=$(get_need_restart_keys_with_value "$ETCD_BASE_PATH" "$partial_need_restart_key" "$need_restart_value")
 
   echo $(set_restart_values_from_need_restart_keys "$need_restart_keys" "$partial_need_restart_key" "$partial_update_key" "$update_value" "$partial_restart_key" "$restart_value")
   sleep "$REFRESH_TIME"
