@@ -13,4 +13,6 @@ MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>
 
 RUN apk-install curl bash jq
 
+ADD files/scripts /usr/local/bin
+
 ENTRYPOINT ["/bin/bash"]
