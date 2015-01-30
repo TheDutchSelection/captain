@@ -31,8 +31,7 @@ get_ports () {
   local ports=""
 
   local etcd_tree=$(get_etcd_tree "$ETCD_BASE_PATH")
-  local ports=$(echo "$etcd_tree" | jq '.nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_port")) | .key + "=" + .value')
-
+  local ports=$(echo "$etcd_tree" | jq '.nodes[] as $av_zones | $av_zones.nodes[] | select(.key | contains("/containers")) | .nodes[] as $apps | $apps.nodes[] as $app_ids | $app_ids.nodes[] | select(.key | contains("/host_port")) | .key + "=" + .value')
   echo "$ports"
 }
 
