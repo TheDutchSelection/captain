@@ -15,4 +15,7 @@ RUN apk-install curl bash
 
 ADD files/scripts /usr/local/bin
 
+RUN \
+  chmod +x /usr/local/bin/jq
+
 ENTRYPOINT ["/bin/bash"]
