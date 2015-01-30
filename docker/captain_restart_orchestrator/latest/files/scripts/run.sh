@@ -89,7 +89,7 @@ restart_value=$(echo "$ETCD_RESTART_KEY_VALUE" | awk -F'##' '{print $2}')
 
 echo "get $partial_need_restart_key where value is $need_restart_value every $REFRESH_TIME seconds..."
 while true; do
-  need_restart_keys=$(get_need_restart_keys_with_value "$ETCD_BASE_PATH" "$partial_need_restart_key" "$need_restart_value")
+  need_restart_keys=$(get_need_restart_keys_with_value "$partial_need_restart_key" "$need_restart_value")
 
   echo $(set_restart_values_from_need_restart_keys "$need_restart_keys" "$partial_need_restart_key" "$partial_update_key" "$update_value" "$partial_restart_key" "$restart_value")
   sleep "$REFRESH_TIME"
