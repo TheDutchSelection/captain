@@ -1,0 +1,17 @@
+# Add application configuration variables here, as shown below.
+
+# required
+DATABASE: "captain_dashboard_development"
+DATABASE_USER: "postgres"
+DATABASE_PASSWORD: "abcd"
+DATABASE_HOST: "127.0.0.1"
+DATABASE_PORT: "5432"
+ETCD_ENDPOINT: "http://127.0.0.1:4001"
+ETCD_BASE_PATH: "/v2/keys/tds/"
+
+# optional
+ETCD_PEM_FILE: "/path/to/pem_file"
+
+test:
+  DATABASE: "captain_dashboard_test"
+  ETCD_BASE_PATH: "/v2/keys/tds_test/"

@@ -1,0 +1,38 @@
+# Defaults
+*.rbc
+capybara-*.html
+.rspec
+/log
+/tmp
+/db/*.sqlite3
+/public/files
+/coverage/
+/spec/tmp
+**.orig
+rerun.txt
+pickle-email-*.html
+
+## Environment normalisation:
+/.bundle
+/vendor/bundle
+
+# these should all be checked in to normalise the environment:
+# Gemfile.lock, .ruby-version, .ruby-gemset
+
+# unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
+.rvmrc
+
+# Rbenv
+.ruby-version
+
+# MacOS X
+.DS_Store
+
+# RubyMine
+.idea
+
+# Figaro application configuration
+/config/application.yml
+
+# Paperclip
+/public/system
