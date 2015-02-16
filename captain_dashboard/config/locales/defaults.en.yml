@@ -1,0 +1,12 @@
+en:
+  defaults:
+    are_you_sure: "Are you sure?"
+    cancel: Cancel
+    delete: Delete
+    error: Error
+    etcd: Etcd
+    logentries: Logentries.com
+    mmonit: MMonit
+    name: Name
+    save: Save
+    zones: Zones

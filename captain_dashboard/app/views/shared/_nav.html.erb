@@ -1,0 +1,31 @@
+<div id="main-nav-bg"></div>
+<nav id="main-nav">
+  <div class="navigation">
+    <ul class="nav nav-stacked">
+      <li>
+        <%= link_to zones_path do %>
+          <span class='glyphicon glyphicon-th'></span>
+          <span><%= t('default.zones') %></span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to etcd_path do %>
+          <span class='glyphicon glyphicon-sort-by-attributes'></span>
+          <span><%= t('default.etcd') %></span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to 'https://www.logentries.com', target: '_blank' do %>
+          <span class='glyphicon glyphicon-share-alt'></span>
+          <span><%= t('default.logentries') %></span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to 'https://mmonit.tdsservers.com', target: '_blank' do %>
+          <span class='glyphicon glyphicon-share-alt'></span>
+          <span><%= t('default.mmonit') %></span>
+        <% end %>
+      </li>
+    </ul>
+  </div>
+</nav>

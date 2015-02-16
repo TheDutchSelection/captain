@@ -1,0 +1,23 @@
+<header>
+  <nav class="navbar navbar-default">
+    <div class="navbar-brand">
+      <%= link_to '/' do %>
+        <%= image_tag('captain.png', size: '21', alt: 'Captain', class: 'logo') %>
+        <span class="app-name"><%= t('app.name') %></span>
+      <% end %>
+    </div>
+    <ul class="nav">
+      <li class="dropdown dark user-menu">
+        <%= link_to '#', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do %>
+          <span class="user-name">User Name</span>
+          <b class="caret"></b>
+        <% end %>
+        <ul class="dropdown-menu">
+          <li>
+            <%= link_to 'Sign out', '/' %>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>

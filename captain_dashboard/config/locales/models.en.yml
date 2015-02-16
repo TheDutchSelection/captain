@@ -1,0 +1,5 @@
+en:
+  models:
+    zone:
+      name: Name
+      etcd_key: "Etcd key"

@@ -1,0 +1,10 @@
+<%- if model.errors.any? %>
+  <div class='well well-default mb-md text-danger'>
+    <h4><%= t('defaults.error')%></h4>
+    <ul>
+      <%- model.errors.full_messages.each do |error| %>
+        <li><%= error %></li>
+      <%- end %>
+    </ul>
+  </div>
+<%- end %>

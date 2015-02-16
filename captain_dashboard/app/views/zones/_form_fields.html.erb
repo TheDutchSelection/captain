@@ -1,0 +1,16 @@
+<div class='row mtb-md'>
+  <div class='col-md-2 mt-sm'>
+    <%= form.label :name, t('defaults.name') %>
+  </div>
+  <div class='col-md-10'>      
+    <%= form.text_field :name, class: 'form-control', placeholder: t('defaults.name') %>
+  </div>
+</div>
+<div class='row mtb-md'>
+  <div class='col-md-2 mt-sm'>
+    <%= form.label :etcd_key, t('models.zone.etcd_key') %>
+  </div>
+  <div class='col-md-10'>
+    <%= form.text_field :etcd_key, class: 'form-control', placeholder: t('models.zone.etcd_key') %>
+  </div>
+</div>

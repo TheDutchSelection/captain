@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    errors:
+      models:
+        zone:
+          attributes:
+            name:
+              blank: "cannot be blank"
+              taken: "must be unique"
+            etcd_key:
+              blank: "cannot be blank"
+              taken: "must be unique"

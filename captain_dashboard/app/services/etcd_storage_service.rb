@@ -8,7 +8,7 @@ class EtcdStorageService
     }
   end
 
-  def get(key)
+  def get(key = '')
     options = @httparty_options.merge({ query: { recursive: 'true' } })
     result = ::HTTParty.get("#{base_url(key)}", options).to_json
     result = JSON.parse(result)

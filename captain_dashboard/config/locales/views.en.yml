@@ -1,0 +1,28 @@
+en:
+  views:
+    sessions:
+      new:
+        title: "Please sign in"
+        remember_me: "Remember me"
+        sign_in: "Sign in"
+
+    shared:
+      nav:
+        products: Products
+        commerce: Commerce
+        processing: Processing
+        admin: Admin
+        visit_portal: "Visit portal"
+        sign_out: "Sign out"
+
+    etcd:
+      index:
+        empty: "The etcd tree is empty."
+
+    zones:
+      edit:
+        title: "Edit Zone"
+      index:
+        new: "New Zone"
+      new:
+        title: "New Zone"

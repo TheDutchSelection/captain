@@ -1,0 +1,306 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+html {
+
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  position: relative;
+  background: #fbfbfb;
+}
+
+#wrapper {
+  min-height: 100%;
+}
+
+.container {
+  width: 100% !important;
+}
+
+#content-wrapper {
+  padding-bottom: 20px;
+}
+
+a, a:hover, .btn-link, .btn-link:hover, .btn-link:focus {
+  color: #222222;
+  text-shadow: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+a.dropdown-toggle {
+  outline: none;
+}
+
+// Margin classes
+.no-margin {
+  margin: 0 !important;
+}
+
+.no-gutter [class*="-6"] {
+  padding-left:0;
+  padding-right:0;
+}
+
+.m-xs {
+  margin: 0;
+}
+.mtb-xs {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.mlr-xs {
+  margin-left: 0;
+  margin-right: 0;
+}
+.mt-xs {
+  margin-top: 0;
+}
+.mr-xs {
+  margin-right: 0;
+}
+.mb-xs {
+  margin-bottom: 0;
+}
+.ml-xs {
+  margin-left: 0;
+}
+
+.m-sm {
+  margin: 5px;
+}
+.mtb-sm {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.mt-sm {
+  margin-top: 5px;
+}
+.mr-sm {
+  margin-right: 5px;
+}
+.mb-sm {
+  margin-bottom: 5px;
+}
+.ml-sm {
+  margin-left: 5px;
+}
+
+.m-md {
+  margin: 10px;
+}
+.mtb-md {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.mt-md {
+  margin-top: 10px;
+}
+.mr-md {
+  margin-right: 10px;
+}
+.mb-md {
+  margin-bottom: 10px;
+}
+.ml-md {
+  margin-left: 10px;
+}
+
+.m-lg {
+  margin: 20px;
+}
+.mtb-lg {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.mt-lg {
+  margin-top: 20px;
+}
+.mr-lg {
+  margin-right: 20px;
+}
+.mb-lg {
+  margin-bottom: 20px;
+}
+.ml-lg {
+  margin-left: 20px;
+}
+
+// Errors
+.field_with_errors input {
+  border-color: $brand-danger;
+}
+
+// Header
+header .navbar {
+  margin: 0;
+  padding: 0 15px;
+  background-color: #f34541;
+  border: none;
+  min-height: 40px;
+  height: 40px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+}
+
+header .navbar > .nav > li.dark > a {
+  background-color: #c3100c;
+}
+
+header .navbar .user-menu .dropdown-toggle {
+  padding: 0 15px;
+}
+
+header .navbar > .nav > li > a {
+  color: white;
+  text-shadow: none;
+  height: 40px;
+  line-height: 40px;
+}
+header .navbar .navbar-brand {
+  color: white;
+  font-size: 20px;
+  text-shadow: none;
+  font-weight: 200;
+  padding: 0;
+  height: 40px;
+  vertical-align: middle;
+  line-height: 40px;
+}
+
+header .navbar .navbar-brand .logo {
+  display: inline-block;
+}
+
+header .navbar .navbar-brand .app-name {
+  margin-left: 5px;
+}
+
+header .navbar .navbar-brand a {
+  color: white;
+  text-decoration: none;
+}
+
+header .navbar .navbar-brand img {
+  margin-top: -2px;
+}
+
+header .navbar > .nav {
+  float: right;
+  margin: 0;
+}
+
+header .navbar .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+// Header
+.page-header {
+  border-bottom-color: #dddddd;
+  margin-left: -15px;
+  margin-right: -15px;
+  position: relative;
+  margin-top: 0;
+  margin-bottom: 30px;
+  color: #222222;
+  background: white;
+  min-height: 85px;
+  padding: 0 15px;
+}
+
+.page-header .buttons {
+  margin-top: 25px;
+}
+
+// Side Navigation
+#main-nav-bg {
+  width: 251px;
+  position: absolute;
+  float: left;
+  border-right: 1px solid #dddddd;
+  background: #f4f4f4;
+  display: block;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+}
+
+#main-nav {
+  width: 250px;
+  position: absolute;
+  left: 0;
+  top: 40px;
+}
+
+#main-nav .navigation {
+  width: 100%;
+}
+
+#main-nav .navigation .nav {
+  margin-bottom: 0;
+}
+
+#main-nav .navigation .nav .glyphicon {
+  margin-right: 10px;
+}
+
+#main-nav .navigation > .nav {
+  border-bottom: 1px solid #e7e7e7;
+  background: #f4f4f4;
+}
+
+#main-nav .navigation > .nav > li {
+  position: relative;
+  display: block;
+  margin: 0;
+}
+
+.nav > li > a {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+}
+
+#main-nav .navigation > .nav > li > a {
+  background-color: #f4f4f4;
+  color: #3c3c3c;
+  height: 42px;
+  display: block;
+  line-height: 45px;
+  padding: 0 10px;
+  border-bottom: 1px solid white;
+  border-top: 1px solid #e7e7e7;
+  overflow: visible !important;
+}
+
+// Content
+#content {
+  margin-left: 251px;
+  min-width: 276px;
+  background: #fbfbfb;
+}

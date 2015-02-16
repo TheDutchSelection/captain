@@ -1,0 +1,19 @@
+<%= content_for :title, "#{t('app.name')} - #{t('defaults.zones')}" %>
+<div class="col-xs-12">
+  <div class="page-header">
+    <h1 class="pull-left">
+      <%= t('default.zones') %>
+    </h1>
+    <div class="buttons pull-right">
+      <div class="btn-group" role="group">
+        <%= link_to t('views.zones.index.new'), new_zone_path, class:'btn btn-default' %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <%= render partial: 'zone_table' %>
+    </div>
+  </div>
+</div>
+
