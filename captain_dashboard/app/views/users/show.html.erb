@@ -1,0 +1,54 @@
+<%= content_for :title, "#{t('app.name')} - #{t('defaults.user')}" %>
+
+<div class="container">
+  <h1><%= t('defaults.user') %></h1>
+  <div class='row mtb-md'>
+    <div class='col-md-2'><label><%= t('models.user.email') %></label></div>
+    <div class='col-md-10'>
+      <%= @user.email %>
+    </div>    
+  </div>
+  <div class='row mtb-md'>
+    <div class='col-md-2'><label><%= t('models.user.role') %></label></div>
+    <div class='col-md-10'>
+      <%= t("models.user.roles.#{@user.role}") %>
+    </div>    
+  </div>
+  <div class='row mtb-md'>
+    <div class='col-md-2'><label><%= t('models.user.created_at') %></label></div>
+    <div class='col-md-10'>
+      <%= format_datetime(@user.created_at) %>
+    </div>    
+  </div>
+  <div class='row mtb-md'>
+    <div class='col-md-2'><label><%= t('models.user.sign_in_count') %></label></div>
+    <div class='col-md-10'>
+      <%= @user.sign_in_count %>
+    </div>    
+  </div>
+  <div class='row mtb-md'>
+    <div class='col-md-2'><label><%= t('models.user.current_sign_in_at') %></label></div>
+    <div class='col-md-10'>
+      <%= format_datetime(@user.current_sign_in_at) %>
+    </div>    
+  </div>
+  <div class='row mtb-md'>
+    <div class='col-md-2'><label><%= t('models.user.last_sign_in_at') %></label></div>
+    <div class='col-md-10'>
+      <%= format_datetime(@user.last_sign_in_at) %>
+    </div>    
+  </div>
+  <div class='row mtb-md'>
+    <div class='col-md-2'><label><%= t('models.user.last_sign_in_ip') %></label></div>
+    <div class='col-md-10'>
+      <%= @user.last_sign_in_ip %>
+    </div>    
+  </div>
+  
+  <div class="btn-group mtb-md">
+    <%= link_to t('defaults.back'), users_path, class:'btn btn-default' %>
+    <%= link_to t('defaults.edit'), edit_user_path(@user), class:'btn btn-default' %>
+    <%= link_to t('views.users.show.change_password'), password_user_path(@user), class:'btn btn-default' %>
+  </div>
+  <%= link_to t('defaults.delete'), user_path(@user), class: 'btn btn-danger mtb-md right', method: :delete, data: { confirm: t('defaults.are_you_sure') } %>
+</div>

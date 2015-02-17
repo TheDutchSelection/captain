@@ -14,7 +14,6 @@ class ZonesController < ApplicationController
 
   def create
     @zone = Zone.new(zone_params)
-
     if @zone.save
       redirect_to zones_path
     else

@@ -57,7 +57,12 @@ get_etcd_tree () {
   fi
 
   local file_content=$(<"$file")
-  local result=$(echo "$file_content" | jq '.node | recurse(.nodes[]?) | select(.key | . == "'"$etcd_path"'") | .')
+
+  if [[ "$etcd_path" == "/" ]]; then
+    local result=$(echo "$file_content" | jq '.node')
+  else
+    local result=$(echo "$file_content" | jq '.node | recurse(.nodes[]?) | select(.key | . == "'"$etcd_path"'") | .')
+  fi
 
   echo "$result"
 }

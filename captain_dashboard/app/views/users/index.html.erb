@@ -1,0 +1,10 @@
+<%= content_for :title, "#{t('app.name')} - #{t('defaults.users')}" %>
+
+<div class="container">
+  <h1><%= t('defaults.users') %></h1>
+  <%= render partial: 'user_table' %>
+
+  <div class="btn-group">
+    <%= link_to t('views.users.index.new'), new_user_path, class:'btn btn-primary btn-default' %>
+  </div>
+</div>
