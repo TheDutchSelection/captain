@@ -11,7 +11,7 @@
     <tbody>
       <%- @zones.each do |zone| %>
         <tr>
-          <td><%= link_to zone.name, edit_zone_path(zone) %></td>
+          <td><%= link_to zone.name, zone_path(zone) %></td>
           <td><%= zone.etcd_key %></td>
         </tr>
       <%- end %>

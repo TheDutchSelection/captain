@@ -1,8 +1,11 @@
 class ZonesController < ApplicationController
-  before_action :set_zone, only: [:edit, :update, :destroy]
+  before_action :set_zone, only: [:edit, :show, :update, :destroy]
 
   def index
     @zones = Zone.all
+  end
+
+  def show
   end
 
   def new
@@ -23,7 +26,7 @@ class ZonesController < ApplicationController
 
   def update
     if @zone.update(zone_params)
-      redirect_to zones_path
+      redirect_to zone_path(@zone)
     else
       render :edit
     end

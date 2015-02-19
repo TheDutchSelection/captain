@@ -19,10 +19,24 @@ en:
       index:
         empty: "The etcd tree is empty."
 
+    users:
+      edit:
+        title: "Edit User"
+      index:
+        empty: "There are no users yet."
+        new: "New User"
+      new:
+        title: "New User"
+      password:
+        title: "Change password"
+      show:
+        change_password: "Change password"
+
     zones:
       edit:
         title: "Edit Zone"
       index:
+        empty: "There are no zones yet."
         new: "New Zone"
       new:
         title: "New Zone"

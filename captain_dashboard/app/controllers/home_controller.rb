@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
   def index
-    redirect_to etcd_path
+    redirect_to zones_path
   end
 end

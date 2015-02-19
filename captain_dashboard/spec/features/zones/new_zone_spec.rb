@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'new zone', type: :feature do
   before do
-    #login_user
+    login_user
   end
 
   it 'should create a zone' do

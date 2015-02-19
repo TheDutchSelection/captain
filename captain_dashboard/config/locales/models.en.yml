@@ -1,5 +1,20 @@
 en:
   models:
+
+    user:
+      email: E-mail
+      password: Password
+      password_confirmation: "Password confirmation"
+      created_at: "Created at"
+      sign_in_count: "Sign in count"
+      current_sign_int_at: "Current sign in at"
+      last_sign_in_at: "Last sign in at"
+      last_sign_in_ip: "Last sign in IP"
+      role: Role
+      roles:
+        member: Member
+        admin: Admin
+
     zone:
       name: Name
       etcd_key: "Etcd key"

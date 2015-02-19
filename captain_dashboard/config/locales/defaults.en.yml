@@ -4,9 +4,11 @@ en:
     cancel: Cancel
     delete: Delete
     error: Error
+    email: Email
     etcd: Etcd
     logentries: Logentries.com
     mmonit: MMonit
     name: Name
     save: Save
+    users: Users
     zones: Zones

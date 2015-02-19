@@ -1,0 +1,31 @@
+<%= content_for :title, "#{t('app.name')} - #{t('defaults.zone')}" %>
+<div class="col-xs-12">
+  <div class="page-header">
+    <h1 class="pull-left">
+      <%= t('defaults.zone') %>
+    </h1>
+    <div class="buttons pull-right">
+      <div class="btn-group" role="group">
+        <%= link_to t('defaults.back'), zones_path, class:'btn btn-default' %>
+        <%= link_to t('defaults.edit'), edit_zone_path(@zone), class:'btn btn-default' %>
+        <%= link_to t('defaults.delete'), zone_path(@zone), class: 'btn btn-danger', method: :delete, data: { confirm: t('defaults.are_you_sure') } %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class='row mtb-md'>
+        <div class='col-md-2'><label><%= t('models.zone.name') %></label></div>
+        <div class='col-md-10'>
+          <%= @zone.name %>
+        </div>
+      </div>
+      <div class='row mtb-md'>
+        <div class='col-md-2'><label><%= t('models.zone.etcd_key') %></label></div>
+        <div class='col-md-10'>
+          <%= @zone.etcd_key %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
