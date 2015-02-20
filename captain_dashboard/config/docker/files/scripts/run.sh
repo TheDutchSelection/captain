@@ -57,7 +57,7 @@ cp -Rp /home/appmaster/application/public_original/* /home/appmaster/application
 echo "precompiling..."
 bundle exec rake assets:precompile
 
-cho "migrating database..."
+echo "migrating database..."
 bundle exec rake db:create db:migrate
 bundle exec rake db:portal:create db:portal:migrate PORTAL="$PORTAL"
 
