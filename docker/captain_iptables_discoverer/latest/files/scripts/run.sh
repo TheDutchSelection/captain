@@ -80,28 +80,36 @@ docker_nat_rules () {
       local container_port_extra_key=${container_ip_key/container_ip/container_port_extra}
       local container_port_peer_key=${container_ip_key/container_ip/container_port_peer}
       local container_port_data_sync_key=${container_ip_key/container_ip/container_port_data_sync}
+      local host_port_key=${container_ip_key/container_ip/host_port}
+      local host_port_extra_key=${container_ip_key/container_ip/host_port_extra}
+      local host_port_peer_key=${container_ip_key/container_ip/host_port_peer}
+      local host_port_data_sync_key=${container_ip_key/container_ip/host_port_data_sync}
       local container_port=$(get_etcd_value "$container_port_key")
       local container_port_extra=$(get_etcd_value "$container_port_extra_key")
       local container_port_peer=$(get_etcd_value "$container_port_peer_key")
       local container_port_data_sync=$(get_etcd_value "$container_port_data_sync_key")
+      local host_port=$(get_etcd_value "$host_port_key")
+      local host_port_extra=$(get_etcd_value "$host_port_extra_key")
+      local host_port_peer=$(get_etcd_value "$host_port_peer_key")
+      local host_port_data_sync=$(get_etcd_value "$host_port_data_sync_key")
       
       if [[ ! -z "$container_port" ]]; then
-        local nat_rule=$(docker_nat_rule "$container_ip" "$container_port")
+        local nat_rule=$(docker_nat_rule "$container_ip" "$container_port" "$host_port")
         local nat_rules="$nat_rules"$'\n'"$nat_rule"
       fi
 
       if [[ ! -z "$container_port_extra" ]]; then
-        local nat_rule=$(docker_nat_rule "$container_ip" "$container_port_extra")
+        local nat_rule=$(docker_nat_rule "$container_ip" "$container_port_extra" "$host_port_extra")
         local nat_rules="$nat_rules"$'\n'"$nat_rule"
       fi
       
       if [[ ! -z "$container_port_peer" ]]; then
-        local nat_rule=$(docker_nat_rule "$container_ip" "$container_port_peer")
+        local nat_rule=$(docker_nat_rule "$container_ip" "$container_port_peer" "$host_port_peer")
         local nat_rules="$nat_rules"$'\n'"$nat_rule"
       fi
       
       if [[ ! -z "$container_port_data_sync" ]]; then
-        local nat_rule=$(docker_nat_rule "$container_ip" "$container_port_data_sync")
+        local nat_rule=$(docker_nat_rule "$container_ip" "$container_port_data_sync" "$host_port_data_sync")
         local nat_rules="$nat_rules"$'\n'"$nat_rule"
       fi
       
@@ -113,10 +121,12 @@ docker_nat_rules () {
 
 # $1: container_ip
 # $2: container_port
+# $3: host_port
 docker_nat_rule () {
   local container_ip="$1"
   local container_port="$2"
-  local nat_rule="-A DOCKER ! -i docker0 -p tcp --dport $container_port -j DNAT --to-destination $container_ip:$container_port"$'\n'"-A DOCKER ! -i docker0 -p udp --dport $container_port -j DNAT --to-destination $container_ip:$container_port"
+  local host_port="$3"
+  local nat_rule="-A DOCKER ! -i docker0 -p tcp --dport $host_port -j DNAT --to-destination $container_ip:$container_port"$'\n'"-A DOCKER ! -i docker0 -p udp --dport $host_port -j DNAT --to-destination $container_ip:$container_port"
 
   echo "$nat_rule"
 }
