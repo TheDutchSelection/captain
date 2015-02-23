@@ -3,33 +3,39 @@
   <div class="navigation">
     <ul class="nav nav-stacked">
       <li>
-        <%= link_to zones_path do %>
+        <%= link_to apps_path do %>
           <span class='glyphicon glyphicon-th'></span>
-          <span><%= t('default.zones') %></span>
+          <span><%= t('defaults.apps') %></span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to zones_path do %>
+          <span class='glyphicon glyphicon-cloud'></span>
+          <span><%= t('defaults.zones') %></span>
         <% end %>
       </li>
       <li>
         <%= link_to etcd_path do %>
           <span class='glyphicon glyphicon-sort-by-attributes'></span>
-          <span><%= t('default.etcd') %></span>
+          <span><%= t('defaults.etcd') %></span>
         <% end %>
       </li>
       <li>
         <%= link_to 'https://www.logentries.com', target: '_blank' do %>
           <span class='glyphicon glyphicon-share-alt'></span>
-          <span><%= t('default.logentries') %></span>
+          <span><%= t('defaults.logentries') %></span>
         <% end %>
       </li>
       <li>
         <%= link_to 'https://mmonit.tdsservers.com', target: '_blank' do %>
           <span class='glyphicon glyphicon-share-alt'></span>
-          <span><%= t('default.mmonit') %></span>
+          <span><%= t('defaults.mmonit') %></span>
         <% end %>
       </li>
       <li>
         <%= link_to users_path do %>
           <span class='glyphicon glyphicon-user'></span>
-          <span><%= t('default.users') %></span>
+          <span><%= t('defaults.users') %></span>
         <% end %>
       </li>
     </ul>

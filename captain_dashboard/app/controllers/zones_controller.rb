@@ -2,7 +2,7 @@ class ZonesController < ApplicationController
   before_action :set_zone, only: [:edit, :show, :update, :destroy]
 
   def index
-    @zones = Zone.all
+    @zones = Zone.all.order(name: :asc)
   end
 
   def show

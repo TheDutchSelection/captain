@@ -15,6 +15,16 @@ en:
         visit_portal: "Visit portal"
         sign_out: "Sign out"
 
+    apps:
+      edit:
+        title: "Edit App"
+      index:
+        empty: "There are no apps yet."
+        new: "New App"
+        zones_empty: "This app has no zones yet."
+      new:
+        title: "New App"
+            
     etcd:
       index:
         empty: "The etcd tree is empty."

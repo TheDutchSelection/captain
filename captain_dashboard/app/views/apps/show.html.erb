@@ -1,0 +1,54 @@
+<%= content_for :title, "#{t('app.name')} - #{t('defaults.app')}" %>
+<div class="col-xs-12">
+  <div class="page-header">
+    <h1 class="pull-left">
+      <%= t('defaults.app') %>
+    </h1>
+    <div class="buttons pull-right">
+      <div class="btn-group" role="group">
+        <%= link_to t('defaults.back'), apps_path, class:'btn btn-default' %>
+        <%= link_to t('defaults.edit'), edit_app_path(@app), class:'btn btn-default' %>
+        <%= link_to t('defaults.delete'), app_path(@app), class: 'btn btn-danger', method: :delete, data: { confirm: t('defaults.are_you_sure') } %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class='row mtb-md'>
+        <div class='col-md-2'><label><%= t('models.app.name') %></label></div>
+        <div class='col-md-10'>
+          <%= @app.name %>
+        </div>
+      </div>
+      <div class='row mtb-md'>
+        <div class='col-md-2'><label><%= t('models.app.etcd_key') %></label></div>
+        <div class='col-md-10'>
+          <%= @app.etcd_key %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- if @app.zones.empty? %>
+    <p class='mb-lg'><%= t('views.apps.index.zones_empty') %></p>
+  <%- else %>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th><%= t('defaults.zone') %></th>
+        <th><%= t('defaults.servers') %></th>
+        <th><%= t('defaults.action') %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <%- @app.zones.each do |zone| %>
+        <tr>
+          <td><%= zone.name %></td>
+          <td><%= server_list(zone, @app) %></td>
+          <td><%= zone.etcd_key %></td>
+        </tr>
+      <%- end %>
+      </tbody>
+    </table>
+  <%- end %>
+</div>

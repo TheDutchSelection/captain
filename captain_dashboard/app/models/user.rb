@@ -5,5 +5,4 @@ class User < ActiveRecord::Base
   enum role: [:member, :admin]
   
   default_scope { order(email: :asc) }
-
 end

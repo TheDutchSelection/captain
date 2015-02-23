@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   get 'etcd', to: 'etcd#index'
 
+  resources :apps
   resources :zones
 
   # Admins only

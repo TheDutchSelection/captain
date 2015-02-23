@@ -1,6 +1,10 @@
 en:
   models:
 
+    app:
+      name: Name
+      etcd_key: "Etcd key"
+
     user:
       email: E-mail
       password: Password

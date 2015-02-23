@@ -40,4 +40,20 @@ RSpec.describe EtcdStorageService do
       expect(etcd_storage_service.get('path/to/key')).to be_empty
     end
   end
+
+  describe '#get_servers_from_zone' do
+    before do
+      load_etcd_sample_data
+    end
+
+    let(:zone) {FactoryGirl.create(:zone, :vla1)}
+
+    it 'should get all servers when no app specified' do
+      servers = etcd_storage_service.get_servers_from_zone(zone)
+      expect(servers).to be_a(Array)
+      expect(servers).to include('vla1wrkprd001')
+      expect(servers).to include('vla1wrkprd002')
+      expect(servers).to_not include('doa3wrkprd001')
+    end
+  end
 end

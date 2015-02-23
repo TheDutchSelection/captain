@@ -63,5 +63,6 @@ RSpec.configure do |config|
   config.after(:each) { Warden.test_reset! }
 
   # Helpers
+  config.include EtcdStorageServiceHelper
   config.include SessionsHelper
 end

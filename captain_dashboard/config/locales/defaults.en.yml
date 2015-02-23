@@ -1,5 +1,8 @@
 en:
   defaults:
+    action: Action
+    app: App
+    apps: Apps
     are_you_sure: "Are you sure?"
     cancel: Cancel
     delete: Delete
@@ -10,5 +13,9 @@ en:
     mmonit: MMonit
     name: Name
     save: Save
+    server: Server
+    servers: Servers
+    user: User
     users: Users
+    zone: Zone
     zones: Zones

@@ -1,18 +1,18 @@
-<%= content_for :title, "#{t('app.name')} - #{t('defaults.users')}" %>
+<%= content_for :title, "#{t('app.name')} - #{t('defaults.apps')}" %>
 <div class="col-xs-12">
   <div class="page-header">
     <h1 class="pull-left">
-      <%= t('defaults.users') %>
+      <%= t('defaults.apps') %>
     </h1>
     <div class="buttons pull-right">
       <div class="btn-group" role="group">
-        <%= link_to t('views.users.index.new'), new_user_path, class:'btn btn-default' %>
+        <%= link_to t('views.apps.index.new'), new_app_path, class:'btn btn-default' %>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12">
-      <%= render partial: 'user_table' %>
+      <%= render partial: 'app_table' %>
     </div>
   </div>
 </div>

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'edit zone', type: :feature do
   before do
-    @zone = FactoryGirl.create(:zone, name: 'Vultr - Amsterdam 1')
+    @zone = FactoryGirl.create(:zone, :vla1)
     login_user
   end
 
