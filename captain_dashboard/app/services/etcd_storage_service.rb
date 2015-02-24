@@ -61,8 +61,10 @@ class EtcdStorageService
       containers_hash = get_hash_from_zone_hash(zone_hash, :containers)
       containers_hash['nodes'].each do |container|
         if container['key'].split('/')[-1].start_with?(app_key)
-          host_name = container['nodes'][0]['key'].split('/')[-1]
-          result.push(host_name)
+          container['nodes'].each do |server|
+            host_name = server['key'].split('/')[-1]
+            result.push(host_name)
+          end
         end
       end
     else
