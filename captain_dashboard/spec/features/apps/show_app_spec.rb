@@ -26,10 +26,12 @@ RSpec.describe 'show app', type: :feature do
 
       update_value_1 = etcd_storage_service.get('vla1/containers/price_comparator_nl_telecom_portal/vla1wrkprd001/update')
       update_value_2 = etcd_storage_service.get('vla1/containers/price_comparator_nl_telecom_backend/vla1wrkprd002/update')
-      update_value_3 = etcd_storage_service.get('vla1/containers/redis_master/vla1wrkprd003/update')
+      update_value_3 = etcd_storage_service.get('vla1/containers/nginx_price_comparator_nl_telecom_portal/vla1wrkprd003/update')
+      update_value_4 = etcd_storage_service.get('vla1/containers/redis_master/vla1wrkprd004/update')
       expect(update_value_1).to eq '1'
       expect(update_value_2).to eq '1'
       expect(update_value_3).to eq '0'
+      expect(update_value_4).to eq '0'
     end
 
     it 'should set the restart key in etcd to 1 when clicked' do
@@ -39,10 +41,12 @@ RSpec.describe 'show app', type: :feature do
 
       need_restart_value_1 = etcd_storage_service.get('vla1/containers/price_comparator_nl_telecom_portal/vla1wrkprd001/need_restart')
       need_restart_value_2 = etcd_storage_service.get('vla1/containers/price_comparator_nl_telecom_backend/vla1wrkprd002/need_restart')
-      need_restart_value_3 = etcd_storage_service.get('vla1/containers/redis_master/vla1wrkprd003/need_restart')
+      need_restart_value_3 = etcd_storage_service.get('vla1/containers/nginx_price_comparator_nl_telecom_portal/vla1wrkprd003/need_restart')
+      need_restart_value_4 = etcd_storage_service.get('vla1/containers/redis_master/vla1wrkprd004/need_restart')
       expect(need_restart_value_1).to eq '1'
       expect(need_restart_value_2).to eq '1'
       expect(need_restart_value_3).to eq '0'
+      expect(need_restart_value_4).to eq '0'
     end
   end
 end

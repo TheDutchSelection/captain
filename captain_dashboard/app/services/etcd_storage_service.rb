@@ -38,7 +38,7 @@ class EtcdStorageService
     zone_hash = get(zone_key)['node']
     containers_hash = get_hash_from_zone_hash(zone_hash, :containers)
     containers_hash['nodes'].each do |app|
-      if app['key'].split('/')[-1].include?(app_key)
+      if app['key'].split('/')[-1].start_with?(app_key)
         app['nodes'].each do |app_server|
           app_server['nodes'].each do |key_value|
             if key_value['key'].split('/')[-1] == key
@@ -60,7 +60,7 @@ class EtcdStorageService
     if app_key.present?
       containers_hash = get_hash_from_zone_hash(zone_hash, :containers)
       containers_hash['nodes'].each do |container|
-        if container['key'].split('/')[-1].include?(app_key)
+        if container['key'].split('/')[-1].start_with?(app_key)
           host_name = container['nodes'][0]['key'].split('/')[-1]
           result.push(host_name)
         end
