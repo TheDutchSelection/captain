@@ -12,9 +12,11 @@ en:
     logentries: Logentries.com
     mmonit: MMonit
     name: Name
+    restart: Restart
     save: Save
     server: Server
     servers: Servers
+    update: Update
     user: User
     users: Users
     zone: Zone

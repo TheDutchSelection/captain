@@ -55,6 +55,7 @@ RSpec.configure do |config|
     # clear etcd path
     etcd_storage_service = EtcdStorageService.new
     etcd_storage_service.delete('')
+    EtcdStorageServiceHelper::load_etcd_sample_data
   }
 
   # Devise
@@ -63,6 +64,5 @@ RSpec.configure do |config|
   config.after(:each) { Warden.test_reset! }
 
   # Helpers
-  config.include EtcdStorageServiceHelper
   config.include SessionsHelper
 end

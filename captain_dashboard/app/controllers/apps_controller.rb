@@ -1,5 +1,5 @@
 class AppsController < ApplicationController
-  before_action :set_app, only: [:edit, :show, :update, :destroy]
+  before_action :set_app, only: [:edit, :show, :update, :destroy, :set_key_in_zone]
   before_action :set_zones, only: [:new, :edit, :update, :create]
 
   def index
@@ -31,6 +31,12 @@ class AppsController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def set_key_in_zone
+    zone = Zone.find(params[:zone_id])
+    @app.set_key_in_zone(zone, params[:key], params[:value])
+    redirect_to app_path(@app)
   end
 
   def destroy

@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   get 'etcd', to: 'etcd#index'
 
   resources :apps
+  put 'apps/:id/:zone_id/:key/:value', to: 'apps#set_key_in_zone', as: 'key_in_zone_app'
+
   resources :zones
 
   # Admins only

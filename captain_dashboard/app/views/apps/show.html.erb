@@ -45,7 +45,14 @@
         <tr>
           <td><%= zone.name %></td>
           <td><%= server_list(zone, @app) %></td>
-          <td><%= zone.etcd_key %></td>
+          <td>
+            <div class="buttons">
+              <div class="btn-group" role="group">
+                <%= link_to t('defaults.update'), key_in_zone_app_path(@app, zone, EtcdStorageService::ETCD_UPDATE_KEY, EtcdStorageService::ETCD_TRUE_VALUE), method: :put, class:'btn btn-default btn-xs' %>
+                <%= link_to t('defaults.restart'), key_in_zone_app_path(@app, zone, EtcdStorageService::ETCD_NEED_RESTART_KEY, EtcdStorageService::ETCD_TRUE_VALUE), method: :put, class:'btn btn-default btn-xs' %>
+              </div>
+            </div>
+          </td>
         </tr>
       <%- end %>
       </tbody>
