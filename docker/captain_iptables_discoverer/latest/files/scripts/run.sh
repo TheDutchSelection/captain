@@ -50,6 +50,9 @@ read -r -d '' iptables_filter_rules_start << EOM || true
 # Accept SSH
 -A INPUT -p tcp --dport 22 -j ACCEPT
 
+# Accept DHCP
+-A INPUT -p udp -d 255.255.255.255 --dport 67:68 -s 0.0.0.0 --sport 67:68 -j ACCEPT
+
 # Allow docker forwarding
 -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -o docker0 -j ACCEPT
 -A FORWARD -i docker0 -j ACCEPT
