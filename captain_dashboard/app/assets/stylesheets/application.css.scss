@@ -53,6 +53,10 @@ a.dropdown-toggle {
   outline: none;
 }
 
+select[multiple], select[size] {
+  min-height: 200px;
+}
+
 // Margin classes
 .no-margin {
   margin: 0 !important;
