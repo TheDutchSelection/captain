@@ -8,31 +8,13 @@ dir="${BASH_SOURCE%/*}"
 if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
 . "$dir/captain_functions"
 
-read -r -d '' iptables_nat_rules_start << EOM || true
-*nat
-
-:PREROUTING ACCEPT [0:0]
-:INPUT ACCEPT [0:0]
-:OUTPUT ACCEPT [0:0]
-:POSTROUTING ACCEPT [0:0]
-:DOCKER - [0:0]
-
-# Docker NAT rules
--A PREROUTING -m addrtype --dst-type LOCAL -j DOCKER
--A OUTPUT -m addrtype --dst-type LOCAL ! -d 127.0.0.0/8 -j DOCKER
--A POSTROUTING ! -o docker0 -s 172.17.0.0/16 -j MASQUERADE
-EOM
-
-read -r -d '' iptables_nat_rules_end << EOM || true
-COMMIT
-EOM
-
 read -r -d '' iptables_filter_rules_start << EOM || true
 *filter
 
 :INPUT DROP [0:0]
 :FORWARD DROP [0:0]
 :OUTPUT ACCEPT [0:0]
+:DOCKER - [0:0]
 
 # General
 -A INPUT -i lo -j ACCEPT
@@ -56,6 +38,9 @@ read -r -d '' iptables_filter_rules_start << EOM || true
 # Allow docker forwarding
 -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -o docker0 -j ACCEPT
 -A FORWARD -i docker0 -j ACCEPT
+
+# Block everything in the DOCKER chain, that docker adds automatically
+-I DOCKER -j DROP
 EOM
 
 read -r -d '' iptables_filter_rules_end << EOM || true
@@ -67,62 +52,6 @@ read -r -d '' iptables_filter_rules_end << EOM || true
 
 COMMIT
 EOM
-
-# $1: container_ips_with_keys
-docker_nat_rules () {
-  # "/tds/doa3/containers/haproxy/doa3wrkprd001/container_ip=172.17.0.6"
-  local container_ips_with_keys="$1"
-  local nat_rules=""
-  while read -r container_ip_with_key; do
-    if [[ ! -z "$container_ip_with_key" ]]; then
-      # remove all double quotes
-      local container_ip_with_key=${container_ip_with_key//\"/}
-      local container_ip_key=$(echo "$container_ip_with_key" | awk -F'=' '{print $1}')
-      local container_ip=$(echo "$container_ip_with_key" | awk -F'=' '{print $2}')
-      local container_port_key=${container_ip_key/container_ip/container_port}
-      local container_port_extra_key=${container_ip_key/container_ip/container_port_extra}
-      local container_port_peer_key=${container_ip_key/container_ip/container_port_peer}
-      local host_port_key=${container_ip_key/container_ip/host_port}
-      local host_port_extra_key=${container_ip_key/container_ip/host_port_extra}
-      local host_port_peer_key=${container_ip_key/container_ip/host_port_peer}
-      local container_port=$(get_etcd_value "$container_port_key")
-      local container_port_extra=$(get_etcd_value "$container_port_extra_key")
-      local container_port_peer=$(get_etcd_value "$container_port_peer_key")
-      local host_port=$(get_etcd_value "$host_port_key")
-      local host_port_extra=$(get_etcd_value "$host_port_extra_key")
-      local host_port_peer=$(get_etcd_value "$host_port_peer_key")
-      
-      if [[ ! -z "$container_port" ]]; then
-        local nat_rule=$(docker_nat_rule "$container_ip" "$container_port" "$host_port")
-        local nat_rules="$nat_rules"$'\n'"$nat_rule"
-      fi
-
-      if [[ ! -z "$container_port_extra" ]]; then
-        local nat_rule=$(docker_nat_rule "$container_ip" "$container_port_extra" "$host_port_extra")
-        local nat_rules="$nat_rules"$'\n'"$nat_rule"
-      fi
-      
-      if [[ ! -z "$container_port_peer" ]]; then
-        local nat_rule=$(docker_nat_rule "$container_ip" "$container_port_peer" "$host_port_peer")
-        local nat_rules="$nat_rules"$'\n'"$nat_rule"
-      fi
-    fi
-  done <<< "$container_ips_with_keys"
-
-  echo "$nat_rules"
-}
-
-# $1: container_ip
-# $2: container_port
-# $3: host_port
-docker_nat_rule () {
-  local container_ip="$1"
-  local container_port="$2"
-  local host_port="$3"
-  local nat_rule="-A DOCKER ! -i docker0 -p tcp --dport $host_port -j DNAT --to-destination $container_ip:$container_port"$'\n'"-A DOCKER ! -i docker0 -p udp --dport $host_port -j DNAT --to-destination $container_ip:$container_port"
-
-  echo "$nat_rule"
-}
 
 extra_rules () {
   envs=$(env)
@@ -203,10 +132,6 @@ write_iptables_rules_file () {
   local private_ip_rules=$(trusted_ip_rules "$private_ips")
   local extra_rules=$(extra_rules)
 
-  if [[ "$EXCLUDE_NAT_RULES" != "1" ]]; then
-    local container_nat_rules=$(docker_nat_rules "$container_ips_with_keys")
-  fi
-
   # put all together
   local complete_file_path=$(get_file_path_including_file_name "$file_path" "$file_name")
   echo "$iptables_filter_rules_start"$'\n' >> "$complete_file_path"
@@ -223,15 +148,6 @@ write_iptables_rules_file () {
     echo "$extra_rules" >> "$complete_file_path"
   fi
   echo "$iptables_filter_rules_end" >> "$complete_file_path"
-
-  if [[ "$EXCLUDE_NAT_RULES" != "1" ]]; then
-    echo "$iptables_nat_rules_start"$'\n' >> "$complete_file_path"
-    if [[ ! -z "$container_nat_rules" ]]; then
-      echo "# container ip and port nat lines" >> "$complete_file_path"
-      echo "$container_nat_rules" >> "$complete_file_path"
-    fi
-    echo "$iptables_nat_rules_end" >> "$complete_file_path"
-  fi
 }
 
 # $1: file path
