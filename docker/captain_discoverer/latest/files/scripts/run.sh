@@ -101,7 +101,6 @@ write_container_environment_file () {
       local host_public_ip_key_values=$(get_all_host_public_ips)
       local host_public_ip_envs=$(create_host_envs "$host_public_ip_key_values")
     fi
-    local host_public_ip_envs="ALL_HOST_PUBLIC_IPS=""$ALL_HOST_PUBLIC_IPS"
 
     # put all together
     local complete_file_path=$(get_file_path_including_file_name "$file_path" "$file_name")
@@ -118,6 +117,8 @@ write_container_environment_file () {
       echo "$app_port_envs" >> "$complete_file_path"
     fi
   fi
+
+  echo "ALL_HOST_PUBLIC_IPS=""$ALL_HOST_PUBLIC_IPS" >> "$complete_file_path"
 }
 
 # $1: file path
@@ -150,6 +151,8 @@ watch_container_environment_file () {
 
   echo "$result"
 }
+
+echo "ALL_HOST_PUBLIC_IPS=""$ALL_HOST_PUBLIC_IPS"
 
 if [[ "$MODE" == "init" ]]; then
   echo "writing environment file at $(get_file_path_including_file_name $FILE_PATH $FILE_NAME)..."
