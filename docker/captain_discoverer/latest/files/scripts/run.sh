@@ -117,8 +117,6 @@ write_container_environment_file () {
       echo "$app_port_envs" >> "$complete_file_path"
     fi
   fi
-
-  echo "ALL_HOST_PUBLIC_IPS=""$ALL_HOST_PUBLIC_IPS" >> "$complete_file_path"
 }
 
 # $1: file path
@@ -151,8 +149,6 @@ watch_container_environment_file () {
 
   echo "$result"
 }
-
-echo "ALL_HOST_PUBLIC_IPS=""$ALL_HOST_PUBLIC_IPS"
 
 if [[ "$MODE" == "init" ]]; then
   echo "writing environment file at $(get_file_path_including_file_name $FILE_PATH $FILE_NAME)..."
