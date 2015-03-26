@@ -99,7 +99,7 @@ write_container_environment_file () {
     local app_port_envs=$(create_app_envs "$app_port_key_values")
     if [[ "$ALL_HOST_PUBLIC_IPS" == "1" ]]; then
       local host_public_ip_key_values=$(get_all_host_public_ips)
-      local host_public_ip_envs=$(create_app_envs "$host_public_ip_key_values")
+      local host_public_ip_envs=$(create_host_envs "$host_public_ip_key_values")
     fi
 
     # put all together
