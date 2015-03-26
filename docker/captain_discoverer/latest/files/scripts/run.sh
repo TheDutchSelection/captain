@@ -78,7 +78,7 @@ create_host_envs () {
     fi
   done <<< "$etcd_key_values"
 
-  echo "$envs"
+  echo "$etcd_key_values"
 }
 
 # $1: file path
