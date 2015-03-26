@@ -90,7 +90,7 @@ write_container_environment_file () {
   
   create_empty_file "$file_path" "$file_name"
 
-  if [[ ! -z "$APP_KEYS" ]]; then
+  if [[ ! -z "$APP_KEYS" || "$ALL_HOST_PUBLIC_IPS" == "1" ]]; then
     local app_public_ip_key_values=$(get_all_app_public_ips)
     local app_private_ip_key_values=$(get_app_private_ips)
     local app_port_key_values=$(get_app_ports)
@@ -99,8 +99,9 @@ write_container_environment_file () {
     local app_port_envs=$(create_app_envs "$app_port_key_values")
     if [[ "$ALL_HOST_PUBLIC_IPS" == "1" ]]; then
       local host_public_ip_key_values=$(get_all_host_public_ips)
-      local host_public_ip_envs="AAP=BIG"
+      local host_public_ip_envs=$(create_host_envs "$host_public_ip_key_values")
     fi
+    local host_public_ip_envs="PINGUIN=EEND"
 
     # put all together
     local complete_file_path=$(get_file_path_including_file_name "$file_path" "$file_name")
