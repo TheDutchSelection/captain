@@ -101,7 +101,7 @@ write_container_environment_file () {
       local host_public_ip_key_values=$(get_all_host_public_ips)
       local host_public_ip_envs=$(create_host_envs "$host_public_ip_key_values")
     fi
-    local host_public_ip_envs="PINGUIN=EEND"
+    local host_public_ip_envs="ALL_HOST_PUBLIC_IPS=""$ALL_HOST_PUBLIC_IPS"
 
     # put all together
     local complete_file_path=$(get_file_path_including_file_name "$file_path" "$file_name")
