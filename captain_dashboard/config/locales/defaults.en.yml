@@ -1,6 +1,7 @@
 en:
   defaults:
     action: Action
+    alertmanager: Alertmanager
     app: App
     apps: Apps
     are_you_sure: "Are you sure?"
@@ -10,8 +11,8 @@ en:
     email: Email
     etcd: Etcd
     logentries: Logentries.com
-    mmonit: MMonit
     name: Name
+    promdash: Promdash
     restart: Restart
     save: Save
     server: Server
