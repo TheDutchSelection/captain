@@ -11,7 +11,11 @@ class EtcdStorageService
   end
 
   def get(key = '')
-    result = @etcd_connection.get("#{base_url(key)}", { recursive: 'true' }).body
+    response = @etcd_connection.get do |req|
+      req.url "#{base_url(key)}"
+      req.params['recursive'] = 'true'
+    end
+    result = response.body
     result = JSON.parse(result)
     if result['node'].has_key?('value')
       result = result['node']['value']
@@ -23,11 +27,18 @@ class EtcdStorageService
   end
 
   def delete(key)
-    @etcd_connection.delete("#{base_url(key)}", { recursive: 'true' })
+    @etcd_connection.delete do |req|
+      req.url "#{base_url(key)}"
+      req.params['recursive'] = 'true'
+    end
   end
 
   def set(key, value, include_prefix = true)
-    result = @etcd_connection.put("#{base_url(key, include_prefix)}", { value: value }).body
+    response = @etcd_connection.put do |req|
+      req.url "#{base_url(key, include_prefix)}"
+      req.params['value'] = value
+    end
+    result = response.body
     JSON.parse(result)
   rescue
     ''
@@ -85,6 +96,10 @@ class EtcdStorageService
       if @config[:ssl_key].present? && @config[:ssl_cert].present? && @config[:ssl_cacert].present?
         etcd_connection = Faraday.new(
           @config[:endpoint],
+          request: {
+            timeout: 30,
+            open_timeout: 30
+          },
           ssl: {
             client_cert: load_certificate(@config[:ssl_cert]),
             client_key: load_key(@config[:ssl_key]),
@@ -92,7 +107,13 @@ class EtcdStorageService
           }
         )
       else
-        etcd_connection = Faraday.new(@config[:endpoint])
+        etcd_connection = Faraday.new(
+          @config[:endpoint],
+          request: {
+            timeout: 30,
+            open_timeout: 30
+          }
+        )
       end
 
       etcd_connection

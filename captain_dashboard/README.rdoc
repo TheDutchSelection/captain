@@ -3,8 +3,8 @@
 You need a running etcd server. These commands spin up an etcd server and test server in a docker container:
 ```
 docker run --name etcd_data -e DATA_DIRECTORY=/root/etcd/data -e USER_ID=0 -e GROUP_ID=0 -v /root/etcd/data thedutchselection/data:latest
-docker run -d --name etcd -p 2379:2379 --volumes-from etcd_data quay.io/coreos/etcd:v2.0.3 -addr 127.0.0.1:2379 -data-dir /root/etcd/data
+docker run -d --name etcd -p 2379:2379 --volumes-from etcd_data quay.io/coreos/etcd:v2.0.10 -addr 127.0.0.1:2379 -data-dir /root/etcd/data
 
 docker run --name etcd_test_data -e DATA_DIRECTORY=/root/etcd/data -e USER_ID=0 -e GROUP_ID=0 -v /root/etcd/data thedutchselection/data:latest
-docker run -d --name etcd_test -p 2380:2379 --volumes-from etcd_test_data quay.io/coreos/etcd:v2.0.3 -addr 127.0.0.1:2379 -data-dir /root/etcd/data
+docker run -d --name etcd_test -p 2380:2379 --volumes-from etcd_test_data quay.io/coreos/etcd:v2.0.10 -addr 127.0.0.1:2379 -data-dir /root/etcd/data
 ```

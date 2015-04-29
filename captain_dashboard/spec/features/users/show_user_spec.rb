@@ -26,7 +26,7 @@ RSpec.describe 'show user', type: :feature do
 
     it 'should not show user' do
       visit users_path
-      expect(page.current_path).to eq zones_path
+      expect(page.current_path).to eq apps_path
       expect(page).to_not have_content 'Last sign in at'
     end
   end  
