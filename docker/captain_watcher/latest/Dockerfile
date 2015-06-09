@@ -1,14 +1,22 @@
 # NAME: Captain Watcher
 #
-# DESCRIPTION: This image watches an etcd value to be set to the specified value and stops after that.
+# DESCRIPTION: This image watches an redis hash field to be set to the specified value and stops after that.
 #
-# REQUIRED ENVS: ETCD_ENDPOINT, ETCD_CA_CERTIFICATE, ETCD_CERTIFICATE_KEY, ETCD_CERTIFICATE, ETCD_KEY, ETCD_VALUE, REFRESH_TIME
+# REQUIRED ENVS:
+# REDIS_HOST (ie. 127.0.0.1)
+# REDIS_PORT (ie. 6379)
+# REDIS_DATABASE (ie. 0)
+# REDIS_FIELD_VALUE (ie. "update##!!1")
+# REDIS_NAMESPACE (ie. "tds", : not allowed)
+# REDIS_APP_AVZONE (ie. "ht20")
+# REDIS_APP (ie. "elasticsearch_data")
+# REDIS_APP_HOST (ie. "ht20wrkprd001")
+# REFRESH_TIME (in seconds, ie. 15)
 #
-# OPTIONAL ENVS: ETCD_CACHE_SECONDS, ETCD_CACHE_FILE
+# OPTIONAL ENVS:
+# REDIS_PASSWORD (ie. abcdabcd)
 #
-# USAGE EXAMPLE: docker run -e ETCD_ENDPOINT "https://127.0.0.1:4001" -e ETCD_CA_CERTIFICATE="/path/to/ca_certificate"
-# -e ETCD_CERTIFICATE="/path/to/certificate" -e ETCD_CERTIFICATE_KEY="/path/to/key" -e ETCD_KEY="/tds/doa3/containers/test/1/restart"
-# -e ETCD_VALUE="1" -e REFRESH_TIME="2" thedutchselection/captain_watcher
+# OTHER:
 
 FROM thedutchselection/captain_services_base:latest
 MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>

@@ -6,9 +6,20 @@ dir="${BASH_SOURCE%/*}"
 if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
 . "$dir/captain_functions"
 
-for key_value in $ETCD_SHORT_KEYS_VALUES; do
-  key=$(echo "$key_value" | awk -F'##' '{print $1}')
-  value=$(echo "$key_value" | awk -F'##' '{print $2}')
-  echo "set $ETCD_BASE_PATH$key to $value"
-  set_etcd_value "$ETCD_BASE_PATH""$key" "$value"
-done
+run_script () {
+  local result=()
+  for field_value in $REDIS_FIELDS_VALUES; do
+    local key=$(create_redis_containers_hash_key "$REDIS_APP_AVZONE" "$REDIS_APP" "$REDIS_APP_HOST")
+    local field=$(echo "$field_value" | awk -F'\#\#\!\!' '{print $1}')
+    local value=$(echo "$field_value" | awk -F'\#\#\!\!' '{print $2}')
+
+    local redis_result=$(set_redis_hash_value "$key" "$field" "$value")
+    local result=("${result[@]}""set field $field from $key to $value with response from redis: $redis_result"'\n')
+  done
+
+  echo ${result[@]}
+}
+
+echo -e $(run_script) &
+
+wait
