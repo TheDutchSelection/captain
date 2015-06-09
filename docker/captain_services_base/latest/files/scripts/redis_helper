@@ -18,7 +18,7 @@ redis_result () {
     local redis_password_command=" -a $REDIS_PASSWORD"
   fi
 
-  local result=$(/usr/bin/redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" -n "$REDIS_DATABASE""$redis_password_command" $redis_command)
+  local result=$(/usr/bin/redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" -n "$REDIS_DATABASE"$redis_password_command $redis_command)
 
   echo "$result"
 }
