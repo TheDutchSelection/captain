@@ -16,6 +16,12 @@ run_script () {
   while [[ "$end_loop" != true ]]; do
     sleep "$REFRESH_TIME"
     local redis_value=$(get_redis_hash_value "$key" "$field")
+
+    if [[ "$redis_value" == "" ]]; then
+      local redis_result=$(set_redis_hash_value "$key" "$field" "0")
+      echo "set field $field from $key to 0 with response from redis: $redis_result"
+    fi
+
     if [[ "$redis_value" == "$value" ]]; then
       echo "field $field from $key is $value, exiting..."
       local end_loop=true

@@ -21,9 +21,9 @@
         </div>
       </div>
       <div class='row mtb-md'>
-        <div class='col-md-2'><label><%= t('models.app.etcd_key') %></label></div>
+        <div class='col-md-2'><label><%= t('models.app.redis_key') %></label></div>
         <div class='col-md-10'>
-          <%= @app.etcd_key %>
+          <%= @app.redis_key %>
         </div>
       </div>
     </div>
@@ -48,8 +48,8 @@
           <td>
             <div class="buttons">
               <div class="btn-group" role="group">
-                <%= link_to t('defaults.update'), key_in_zone_app_path(@app, zone, EtcdStorageService::ETCD_UPDATE_KEY, EtcdStorageService::ETCD_TRUE_VALUE), method: :put, class:'btn btn-default btn-xs' %>
-                <%= link_to t('defaults.restart'), key_in_zone_app_path(@app, zone, EtcdStorageService::ETCD_NEED_RESTART_KEY, EtcdStorageService::ETCD_TRUE_VALUE), method: :put, class:'btn btn-default btn-xs' %>
+                <%= link_to t('defaults.update'), key_in_zone_app_path(@app, zone, RedisStorageService::REDIS_UPDATE_KEY, RedisStorageService::REDIS_TRUE_VALUE), method: :put, class:'btn btn-default btn-xs' %>
+                <%= link_to t('defaults.restart'), key_in_zone_app_path(@app, zone, RedisStorageService::REDIS_NEED_RESTART_KEY, RedisStorageService::REDIS_TRUE_VALUE), method: :put, class:'btn btn-default btn-xs' %>
               </div>
             </div>
           </td>

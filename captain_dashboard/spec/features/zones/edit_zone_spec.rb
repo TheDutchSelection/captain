@@ -12,7 +12,7 @@ RSpec.describe 'edit zone', type: :feature do
     click_link('Edit')
     within('form') do
       fill_in 'zone[name]', with: 'Vultr - Amsterdam 2'
-      fill_in 'zone[etcd_key]', with: 'vla1'
+      fill_in 'zone[redis_key]', with: 'vla1'
     end
     click_button 'Save'
     expect(page.current_path).to eq zone_path(@zone)
@@ -39,7 +39,7 @@ RSpec.describe 'edit zone', type: :feature do
     click_link('Edit')
     within('form') do
       fill_in 'zone[name]', with: 'Vultr - Amsterdam 2'
-      fill_in 'zone[etcd_key]', with: 'vla1'
+      fill_in 'zone[redis_key]', with: 'vla1'
     end
     click_link 'Cancel'
     expect(page.current_path).to eq zone_path(@zone)

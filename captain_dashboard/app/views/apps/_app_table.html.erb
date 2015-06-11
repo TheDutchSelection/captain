@@ -5,14 +5,14 @@
     <thead>
       <tr>
         <th><%= t('defaults.name') %></th>
-        <th><%= t('models.app.etcd_key') %></th>
+        <th><%= t('models.app.redis_key') %></th>
       </tr>
     </thead>
     <tbody>
       <%- @apps.each do |app| %>
         <tr>
           <td><%= link_to app.name, app_path(app) %></td>
-          <td><%= app.etcd_key %></td>
+          <td><%= app.redis_key %></td>
         </tr>
       <%- end %>
     </tbody>

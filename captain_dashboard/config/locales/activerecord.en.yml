@@ -7,6 +7,6 @@ en:
             name:
               blank: "cannot be blank"
               taken: "must be unique"
-            etcd_key:
+            redis_key:
               blank: "cannot be blank"
               taken: "must be unique"

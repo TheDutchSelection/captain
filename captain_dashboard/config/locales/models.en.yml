@@ -3,7 +3,7 @@ en:
 
     app:
       name: Name
-      etcd_key: "Etcd key"
+      redis_key: "Redis key"
 
     user:
       email: E-mail
@@ -21,4 +21,4 @@ en:
 
     zone:
       name: Name
-      etcd_key: "Etcd key"
+      redis_key: "Redis key"

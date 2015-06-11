@@ -54,6 +54,6 @@ class AppsController < ApplicationController
     end
 
     def app_params
-      params[:app].permit(:name, :etcd_key, zone_ids: [])
+      params[:app].permit(:name, :redis_key, zone_ids: [])
     end
 end

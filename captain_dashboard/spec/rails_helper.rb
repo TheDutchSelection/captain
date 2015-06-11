@@ -51,13 +51,6 @@ RSpec.configure do |config|
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
 
-  config.before(:suite) {
-    # clear etcd path
-    etcd_storage_service = EtcdStorageService.new
-    etcd_storage_service.delete('')
-    EtcdStorageServiceHelper::load_etcd_sample_data
-  }
-
   # Devise
   config.include(Warden::Test::Helpers)
   Warden.test_mode!

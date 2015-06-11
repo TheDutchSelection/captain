@@ -6,7 +6,7 @@
 # REDIS_HOST (ie. 127.0.0.1)
 # REDIS_PORT (ie. 6379)
 # REDIS_DATABASE (ie. 0)
-# REDIS_FIELD_VALUE (ie. "update##!!1")
+# REDIS_FIELD_VALUE (ie. "update##!!1", value should not be "0")
 # REDIS_NAMESPACE (ie. "tds", : not allowed)
 # REDIS_APP_AVZONE (ie. "ht20")
 # REDIS_APP (ie. "elasticsearch_data")

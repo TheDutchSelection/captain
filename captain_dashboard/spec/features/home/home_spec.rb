@@ -12,7 +12,7 @@ RSpec.describe 'home', type: :feature do
     within '#main-nav' do
       expect(page).to have_content 'Apps'
       expect(page).to have_content 'Zones'
-      expect(page).to have_content 'Etcd'
+      expect(page).to have_content 'Redis'
       expect(page).to have_content 'Logentries.com'
       expect(page).to have_content 'Alertmanager'
       expect(page).to have_content 'Promdash'

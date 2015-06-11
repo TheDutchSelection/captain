@@ -9,10 +9,12 @@ en:
     delete: Delete
     error: Error
     email: Email
-    etcd: Etcd
+    field: Field
+    key: Key
     logentries: Logentries.com
     name: Name
     promdash: Promdash
+    redis: Redis
     restart: Restart
     save: Save
     server: Server
@@ -20,5 +22,6 @@ en:
     update: Update
     user: User
     users: Users
+    value: value
     zone: Zone
     zones: Zones

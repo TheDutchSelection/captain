@@ -25,9 +25,9 @@ en:
       new:
         title: "New App"
             
-    etcd:
+    redis:
       index:
-        empty: "The etcd tree is empty."
+        empty: "The redis namespace is empty."
 
     users:
       edit:
