@@ -6,14 +6,11 @@ DATABASE_USER: "postgres"
 DATABASE_PASSWORD: "abcd"
 DATABASE_HOST: "127.0.0.1"
 DATABASE_PORT: "5432"
-ETCD_ENDPOINT: "http://127.0.0.1:2379"
-ETCD_BASE_PATH: "/v2/keys/tds/"
-
-# optional
-ETCD_CERTIFICATE_KEY: "/path/to/etcd_ssl_key"
-ETCD_CERTIFICATE: "/path/to/etcd_ssl_cert"
-ETCD_CA_CERTIFICATE: "/path/to/etcd_ssl_cacert"
+REDIS_HOST: "127.0.0.1"
+REDIS_PORT: "6379"
+REDIS_DATABASE: "1"
+REDIS_NAMESPACE: "tds"
 
 test:
   DATABASE: "captain_dashboard_test"
-  ETCD_BASE_PATH: "/v2/keys/tds_test/"
+  REDIS_PORT: "6380"

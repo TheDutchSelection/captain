@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { sessions: 'sessions' }, :skip => [:passwords, :registration]
 
-  get 'etcd', to: 'etcd#index'
+  get 'redis', to: 'redis#index'
 
   resources :apps
   put 'apps/:id/:zone_id/:key/:value', to: 'apps#set_key_in_zone', as: 'key_in_zone_app'

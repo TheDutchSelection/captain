@@ -11,7 +11,7 @@ RSpec.describe 'new app', type: :feature do
     click_link 'New App'
     within('form') do
       fill_in 'app[name]', with: 'Application 1'
-      fill_in 'app[etcd_key]', with: 'vla1'
+      fill_in 'app[redis_key]', with: 'vla1'
       select 'Vultr - Amsterdam 1', :from => 'app[zone_ids][]'
     end
     click_button 'Save'
@@ -25,7 +25,7 @@ RSpec.describe 'new app', type: :feature do
     click_link 'New App'
     within('form') do
       fill_in 'app[name]', with: ''
-      fill_in 'app[etcd_key]', with: ''
+      fill_in 'app[redis_key]', with: ''
     end
     click_button 'Save'
     expect(page.current_path).to eq apps_path
@@ -37,7 +37,7 @@ RSpec.describe 'new app', type: :feature do
     click_link 'New App'
     within('form') do
       fill_in 'app[name]', with: 'Application 1'
-      fill_in 'app[etcd_key]', with: 'vla1'
+      fill_in 'app[redis_key]', with: 'vla1'
     end
     click_link 'Cancel'
     expect(page.current_path).to eq apps_path

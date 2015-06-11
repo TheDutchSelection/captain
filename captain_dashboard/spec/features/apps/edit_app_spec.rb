@@ -12,7 +12,7 @@ RSpec.describe 'edit app', type: :feature do
     click_link('Edit')
     within('form') do
       fill_in 'app[name]', with: 'Application 2'
-      fill_in 'app[etcd_key]', with: 'vla1'
+      fill_in 'app[redis_key]', with: 'vla1'
     end
     click_button 'Save'
     expect(page.current_path).to eq app_path(@app)
@@ -39,7 +39,7 @@ RSpec.describe 'edit app', type: :feature do
     click_link('Edit')
     within('form') do
       fill_in 'app[name]', with: 'Application 2'
-      fill_in 'app[etcd_key]', with: 'vla1'
+      fill_in 'app[redis_key]', with: 'vla1'
     end
     click_link 'Cancel'
     expect(page.current_path).to eq app_path(@app)

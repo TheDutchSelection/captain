@@ -43,6 +43,6 @@ class ZonesController < ApplicationController
     end
 
     def zone_params
-      params[:zone].permit(:name, :etcd_key)
+      params[:zone].permit(:name, :redis_key)
     end
 end
