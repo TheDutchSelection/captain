@@ -67,7 +67,8 @@ upload_to_aws_s3 () {
   local request_service="s3"
   local request_date=$(printf "${request_time}" | cut -c 1-8)
   local algorithm="AWS4-HMAC-SHA256"
-  local expire=$(date --date="1 hour" +"%Y-%m-%dT%H:%M:%SZ")
+  local request_date_plus_3600_seconds=$(date +"%Y-%m-%d %H:%M:3600")
+  local expire=$(date --date="$request_date_plus_3600_seconds" +"%Y-%m-%dT%H:%M:%SZ")
   local acl="private"
 
   local post_policy='{"expiration":"'$expire'","conditions": [{"bucket":"'$bucket_name'" },{"acl":"'$acl'" },["starts-with", "$key", "'$remote_file'"],["eq", "$Content-Type", "application/octet-stream"],{"x-amz-credential":"'$access_key_id'/'$request_date'/'$bucket_region'/'$request_service'/aws4_request"},{"x-amz-algorithm":"'$algorithm'"},{"x-amz-date":"'$request_time'"}]}'
