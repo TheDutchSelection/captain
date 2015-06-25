@@ -79,7 +79,7 @@ upload_to_aws_s3 () {
 
   curl \
       --silent \
-      --limit-rate 300k \
+      --limit-rate 900k \
       --connect-timeout 120 \
       -F "key=""$remote_file" \
       -F "acl="$acl"" \
