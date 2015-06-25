@@ -3,8 +3,13 @@
 # DESCRIPTION: Captain Services Base.
 #
 # REQUIRED ENVS:
+# REDIS_HOST (ie. 127.0.0.1)
+# REDIS_PORT (ie. 6379)
+# REDIS_DATABASE (ie. 0)
+# REDIS_NAMESPACE (ie. "tds", : not allowed)
 #
 # OPTIONAL ENVS:
+# REDIS_PASSWORD (ie. abcdabcd)
 #
 # OTHER:
 

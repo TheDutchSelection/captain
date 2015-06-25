@@ -1,10 +1,4 @@
 #!/bin/bash
-# DESCRIPTION: Helper with functions to interact with redis
-# DEPENDENCIES: redis-cli
-# REQUIRED ENVS: REDIS_HOST, REDIS_PORT, REDIS_DATABASE, REDIS_NAMESPACE
-# OPTIONAL ENVS: REDIS_PASSWORD
-# USAGE:
-# EXAMPLE:
 set -e
 
 redis_namespace="$REDIS_NAMESPACE"":captain:"
