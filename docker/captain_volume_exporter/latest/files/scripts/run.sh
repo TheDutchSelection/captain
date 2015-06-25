@@ -11,7 +11,7 @@ run_script () {
   local current_time=$(date +"%H:%M")
   local tar_path="/backup/"
   
-  mkdir -p /backup
+  mkdir -p "$tar_path"
   
   echo "current time: $current_time"
   echo "waiting for execution time $EXECUTION_TIME to backup volume $VOLUME..."
