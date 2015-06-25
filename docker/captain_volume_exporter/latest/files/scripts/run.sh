@@ -14,7 +14,7 @@ run_script () {
   mkdir -p /backup
   
   echo "current time: $current_time"
-  echo "waiting for execution time $EXECUTION_TIME to backup volume $DATA_CONTAINER_VOLUME..."
+  echo "waiting for execution time $EXECUTION_TIME to backup volume $VOLUME..."
 
   while [[ true ]]; do
     sleep 45
@@ -26,8 +26,8 @@ run_script () {
       local old_tar_file_with_path="$tar_path$tar_file"
       local tar_file_with_path="$tar_path$tar_file"
 
-      echo "backup volume $DATA_CONTAINER_VOLUME to $tar_file_with_path..."
-      tar cvf "$tar_file_with_path" "$DATA_CONTAINER_VOLUME"
+      echo "backup volume $VOLUME to $tar_file_with_path..."
+      tar cvf "$tar_file_with_path" "$VOLUME"
 
       if [[ ! -z "$AWS_S3_ACCESS_KEY_ID" ]]; then
         echo "removing old local backup file $old_tar_file_with_path..."
