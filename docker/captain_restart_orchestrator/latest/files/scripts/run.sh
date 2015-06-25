@@ -90,18 +90,11 @@ set_restart_fields () {
 }
 
 run_script () {
-  local need_restart_field=$(echo "$REDIS_NEED_RESTART_FIELD_VALUE" | awk -F'\#\#\!\!' '{print $1}')
-  local need_restart_value=$(echo "$REDIS_NEED_RESTART_FIELD_VALUE" | awk -F'\#\#\!\!' '{print $2}')
-  local update_field=$(echo "$REDIS_UPDATE_FIELD_VALUE" | awk -F'\#\#\!\!' '{print $1}')
-  local update_value=$(echo "$REDIS_UPDATE_FIELD_VALUE" | awk -F'\#\#\!\!' '{print $2}')
-  local restart_field=$(echo "$REDIS_RESTART_FIELD_VALUE" | awk -F'\#\#\!\!' '{print $1}')
-  local restart_value=$(echo "$REDIS_RESTART_FIELD_VALUE" | awk -F'\#\#\!\!' '{print $2}')
-
-  echo "get $need_restart_field where value is $need_restart_value every $REFRESH_TIME seconds..."
+  echo "get $redis_need_restart_field where value is $redis_true_value every $REFRESH_TIME seconds..."
   while true; do
-    local need_restart_keys=$(get_need_restart_keys_for_need_restart_value "$need_restart_field" "$need_restart_value")
+    local need_restart_keys=$(get_need_restart_keys_for_need_restart_value "$redis_need_restart_field" "$redis_true_value")
 
-    local result=$(set_restart_fields "$need_restart_keys" "$update_field" "$update_value" "$restart_field" "$restart_value")
+    local result=$(set_restart_fields "$need_restart_keys" "$redis_update_field" "$redis_true_value" "$redis_restart_field" "$redis_true_value")
 
     if [[ ! -z "$result" ]]; then
       echo -e "$result"

@@ -9,6 +9,12 @@ set -e
 
 redis_namespace="$REDIS_NAMESPACE"":captain:"
 
+redis_false_value="0"
+redis_need_restart_field="need_restart"
+redis_true_value="1"
+redis_restart_field="restart"
+redis_update_field="update"
+
 # $1: redis_command
 redis_result () {
   set -e
