@@ -16,7 +16,7 @@ run_script () {
   echo "current time: $current_time"
   echo "waiting for execution time $EXECUTION_TIME to backup volume $VOLUME..."
 
-  while [[ true ]]; do
+  while true; do
     sleep 45
 
     local current_time=$(date +"%H:%M")

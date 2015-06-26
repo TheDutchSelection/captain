@@ -13,7 +13,7 @@ run_script () {
   local end_loop=false
 
   echo "watching field $field from $key for $value..."
-  while [[ "$end_loop" != true ]]; do
+  while [[ ! "$end_loop" ]]; do
     sleep "$REFRESH_TIME"
     local redis_value=$(get_redis_hash_value "$key" "$field")
 

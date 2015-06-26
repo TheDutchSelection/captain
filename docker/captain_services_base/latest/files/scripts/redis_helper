@@ -80,6 +80,63 @@ get_app_from_redis_key () {
   echo "$result"
 }
 
+# $1: redis keys
+# $2: redis field
+# $3: redis_value
+set_redis_hash_field_from_keys () {
+  set -e
+  local redis_keys="$1"
+  local redis_field="$2"
+  local redis_value="$3"
+
+  local result=()
+
+  while read -r redis_key; do
+    if [[ ! -z "$redis_key" ]]; then
+      local redis_result=$(set_redis_hash_value "$redis_key" "$redis_field" "$redis_value")
+      local result=("${result[@]}""set field $redis_field from $redis_key to $redis_value with response from redis: $redis_result"'\n')
+    fi
+  done <<< "$redis_keys"
+
+  echo ${result[@]}
+}
+
+# $1: redis keys
+# $2: redis hash field value
+# description: returns feedback from redis or false when all field values are not redis_hash_field_value
+check_all_redis_hash_fields_from_keys () {
+  set -e
+  local redis_keys="$1"
+  local redis_value="$2"
+
+  local result=()
+
+  while read -r redis_key; do
+    if [[ ! -z "$redis_key" ]]; then
+      local redis_result=$(get_redis_hash_value "$redis_key" "$redis_need_restart_field")
+      if [[ "$redis_result" == "$redis_value" ]]; then
+        local result=("${result[@]}""$redis_key field $redis_need_restart_field is $redis_value"'\n')
+      fi
+
+      local redis_result=$(get_redis_hash_value "$redis_key" "$redis_restart_field")
+      if [[ "$redis_result" == "$redis_value" ]]; then
+        local result=("${result[@]}""$redis_key field $redis_restart_field is $redis_value"'\n')
+      fi
+
+      local redis_result=$(get_redis_hash_value "$redis_key" "$redis_update_field")
+      if [[ "$redis_result" == "$redis_value" ]]; then
+        local result=("${result[@]}""$redis_key field $redis_update_field is $redis_value"'\n')
+      fi
+    fi
+  done <<< "$redis_keys"
+
+  if [[ -z "$result" ]]; then
+    return $(false)
+  else
+    echo ${result[@]}
+  fi
+}
+
 # $1: app key
 # $2: redis hash field
 # $3: redis hash field value
