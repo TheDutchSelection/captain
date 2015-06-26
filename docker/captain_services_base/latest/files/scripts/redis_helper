@@ -115,17 +115,17 @@ check_all_redis_hash_fields_from_keys () {
     if [[ ! -z "$redis_key" ]]; then
       local redis_result=$(get_redis_hash_value "$redis_key" "$redis_need_restart_field")
       if [[ "$redis_result" == "$redis_value" ]]; then
-        local result=("${result[@]}""$redis_key field $redis_need_restart_field is $redis_value"'\n')
+        local result=("${result[@]}""$redis_key - currently needing a restart"'\n')
       fi
 
       local redis_result=$(get_redis_hash_value "$redis_key" "$redis_restart_field")
       if [[ "$redis_result" == "$redis_value" ]]; then
-        local result=("${result[@]}""$redis_key field $redis_restart_field is $redis_value"'\n')
+        local result=("${result[@]}""$redis_key - currently restarting"'\n')
       fi
 
       local redis_result=$(get_redis_hash_value "$redis_key" "$redis_update_field")
       if [[ "$redis_result" == "$redis_value" ]]; then
-        local result=("${result[@]}""$redis_key field $redis_update_field is $redis_value"'\n')
+        local result=("${result[@]}""$redis_key - currently updating"'\n')
       fi
     fi
   done <<< "$redis_keys"
