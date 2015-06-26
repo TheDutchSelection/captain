@@ -103,7 +103,7 @@ set_redis_hash_field_from_keys () {
 
 # $1: redis keys
 # $2: redis hash field value
-# description: returns feedback from redis or false when all field values are not redis_hash_field_value
+# description: returns feedback from redis or the string "false" when all field values are not redis_hash_field_value
 check_all_redis_hash_fields_from_keys () {
   set -e
   local redis_keys="$1"
@@ -131,7 +131,7 @@ check_all_redis_hash_fields_from_keys () {
   done <<< "$redis_keys"
 
   if [[ -z "$result" ]]; then
-    return $(false)
+    echo "false"
   else
     echo ${result[@]}
   fi
