@@ -10,7 +10,7 @@ run_script () {
   local key=$(create_redis_containers_hash_key "$REDIS_APP_AVZONE" "$REDIS_APP" "$REDIS_APP_HOST")
   local field=$(echo "$REDIS_FIELD_VALUE" | awk -F'\#\#\!\!' '{print $1}')
   local value=$(echo "$REDIS_FIELD_VALUE" | awk -F'\#\#\!\!' '{print $2}')
-  local end_loop=false
+  local end_loop=$(false)
 
   echo "watching field $field from $key for $value..."
   while [[ ! "$end_loop" ]]; do
@@ -24,7 +24,7 @@ run_script () {
 
     if [[ "$redis_value" == "$value" ]]; then
       echo "field $field from $key is $value, exiting..."
-      local end_loop=true
+      local end_loop=$(true)
     fi
   done
 }
