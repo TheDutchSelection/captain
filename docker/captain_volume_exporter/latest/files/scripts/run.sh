@@ -23,7 +23,7 @@ run_script () {
     if [[ "$current_time" == "$EXECUTION_TIME" ]]; then
       local time_stamp=$(date +"%Y-%m-%d-%H-%M-%S")
       local tar_file="$TAR_BASE_FILENAME""_""$time_stamp"".tar"
-      local old_tar_file_with_path="$tar_path$tar_file"
+      local old_tar_file_with_path="$tar_file_with_path"
       local tar_file_with_path="$tar_path$tar_file"
 
       echo "backup volume $VOLUME to $tar_file_with_path..."
