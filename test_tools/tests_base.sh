@@ -94,8 +94,13 @@ start_elasticsearch_container () {
 
   sleep 1
 
-  elasticsearch_host=$(docker inspect --format '{{ .NetworkSettings.Gateway }}' "$container_name")
-  elasticsearch_port=$(docker inspect --format '{{(index (index .NetworkSettings.Ports "9200/tcp") 0).HostPort }}' "$container_name")
+  if [[ -z "$identifier" ]]; then
+    elasticsearch_host=$(docker inspect --format '{{ .NetworkSettings.Gateway }}' "$container_name")
+    elasticsearch_port=$(docker inspect --format '{{(index (index .NetworkSettings.Ports "9200/tcp") 0).HostPort }}' "$container_name")
+  else
+    eval "elasticsearch_${identifier}_host=$(docker inspect --format '{{ .NetworkSettings.Gateway }}' "$container_name")"
+    eval "elasticsearch_${identifier}_port=$(docker inspect --format '{{(index (index .NetworkSettings.Ports "9200/tcp") 0).HostPort }}' "$container_name")"
+  fi
 }
 
 # $1: container name
@@ -133,8 +138,13 @@ start_postgresql_container () {
 
   sleep 1
 
-  postgresql_host=$(docker inspect --format '{{ .NetworkSettings.Gateway }}' "$container_name")
-  postgresql_port=$(docker inspect --format '{{(index (index .NetworkSettings.Ports "5432/tcp") 0).HostPort }}' "$container_name")
+  if [[ -z "$identifier" ]]; then
+    postgresql_host=$(docker inspect --format '{{ .NetworkSettings.Gateway }}' "$container_name")
+    postgresql_port=$(docker inspect --format '{{(index (index .NetworkSettings.Ports "5432/tcp") 0).HostPort }}' "$container_name")
+  else
+    eval "postgresql_${identifier}_host=$(docker inspect --format '{{ .NetworkSettings.Gateway }}' "$container_name")"
+    eval "postgresql_${identifier}_port=$(docker inspect --format '{{(index (index .NetworkSettings.Ports "5432/tcp") 0).HostPort }}' "$container_name")"
+  fi
 }
 
 # $1: container name
@@ -167,6 +177,11 @@ start_redis_container () {
 
   sleep 1
 
-  redis_host=$(docker inspect --format '{{ .NetworkSettings.Gateway }}' "$container_name")
-  redis_port=$(docker inspect --format '{{(index (index .NetworkSettings.Ports "6379/tcp") 0).HostPort }}' "$container_name")
+  if [[ -z "$identifier" ]]; then
+    redis_host=$(docker inspect --format '{{ .NetworkSettings.Gateway }}' "$container_name")
+    redis_port=$(docker inspect --format '{{(index (index .NetworkSettings.Ports "6379/tcp") 0).HostPort }}' "$container_name")
+  else
+    eval "redis_${identifier}_host=$(docker inspect --format '{{ .NetworkSettings.Gateway }}' "$container_name")"
+    eval "redis_${identifier}_port=$(docker inspect --format '{{(index (index .NetworkSettings.Ports "6379/tcp") 0).HostPort }}' "$container_name")"
+  fi
 }
