@@ -1,7 +1,0 @@
-# Captain Dashboard
-## Requirements
-You need a running redis server. These commands spin up an redis server and test server in a docker container:
-```
-docker run --name redis_data -e DATA_DIRECTORY="/home/redis/db/" -e USER_ID="6379" -e GROUP_ID="6379" -v /home/redis/db/ thedutchselection/data:latest
-docker run -d -e DATA_DIRECTORY="/home/redis/db" -p 6379:6379 --name redis --volumes-from redis_data thedutchselection/redis:2.8.18
-```
