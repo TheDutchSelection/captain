@@ -51,10 +51,18 @@ start_data_container () {
 
 # $1: container name
 # $2: data container name
+# $3: identifier (optional)
 start_elasticsearch_container () {
   set -e
   local container_name="$1"
   local data_container_name="$2"
+  local identifier="$3"
+
+  if [[ ! -z "$identifier" ]]; then
+    local identifier="_""$identifier"
+    local container_name="$container_name""$identifier"
+    local data_container_name="$data_container_name""$identifier"
+  fi
 
   start_data_container "$data_container_name" "/home/elastic/data" "9200" "9200"
 
@@ -92,10 +100,18 @@ start_elasticsearch_container () {
 
 # $1: container name
 # $2: data container name
+# $3: identifier (optional)
 start_postgresql_container () {
   set -e
   local container_name="$1"
   local data_container_name="$2"
+  local identifier="$3"
+
+  if [[ ! -z "$identifier" ]]; then
+    local identifier="_""$identifier"
+    local container_name="$container_name""$identifier"
+    local data_container_name="$data_container_name""$identifier"
+  fi
 
   postgresql_user_name="test"
   postgresql_password="test123test"
@@ -123,10 +139,18 @@ start_postgresql_container () {
 
 # $1: container name
 # $2: data container name
+# $3: identifier (optional)
 start_redis_container () {
   set -e
   local container_name="$1"
   local data_container_name="$2"
+  local identifier="$3"
+
+  if [[ ! -z "$identifier" ]]; then
+    local identifier="_""$identifier"
+    local container_name="$container_name""$identifier"
+    local data_container_name="$data_container_name""$identifier"
+  fi
 
   start_data_container "$data_container_name" "/home/redis/data" "6379" "6379"
 
