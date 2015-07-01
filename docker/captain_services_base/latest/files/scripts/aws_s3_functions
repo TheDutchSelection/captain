@@ -1,9 +1,4 @@
 #!/bin/bash
-# DESCRIPTION: Helper with functions to interact with AWS S3
-# REQUIRED ENVS: 
-# OPTIONAL ENVS: 
-# USAGE:
-# EXAMPLE:
 set -e
 
 hmac-sha256s(){
@@ -91,4 +86,3 @@ upload_to_aws_s3 () {
       -F "X-Amz-Signature="$signature"" \
       -F "file=@"$local_file http://$bucket_name.s3.amazonaws.com/
 }
-

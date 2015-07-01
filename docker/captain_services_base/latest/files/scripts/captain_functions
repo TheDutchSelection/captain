@@ -1,10 +1,4 @@
 #!/bin/bash
-# DESCRIPTION: Helper with functions used by captain scripts
-# DEPENDENCIES: etcd_helper
-# REQUIRED ENVS: 
-# OPTIONAL ENVS:
-# USAGE:
-# EXAMPLE:
 set -e
 
 trap "echo exit signal received... exiting;exit" SIGINT SIGTERM SIGKILL
