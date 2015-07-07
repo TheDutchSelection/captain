@@ -73,6 +73,7 @@ start_elasticsearch_container () {
   -e "PATH_DATA=/home/elastic/data/data" \
   -e "PATH_WORK=/home/elastic/data/work" \
   -e "PATH_LOGS=/home/elastic/data/logs" \
+  -e "PATH_REPO=/home/elastic/data/backups" \
   -e "PUBLISH_HOST=127.0.0.1" \
   -e "TRANSPORT_PORT=9300" \
   -e "HTTP_PORT=9200" \
