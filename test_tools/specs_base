@@ -23,7 +23,7 @@ clean_up_containers () {
   do
     docker stop "$container_name" || true
     docker kill "$container_name" || true
-    docker rm "$container_name" || true
+    docker rm -v "$container_name" || true
   done
 }
 
