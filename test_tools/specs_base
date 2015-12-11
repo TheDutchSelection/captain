@@ -6,7 +6,7 @@ data_image_tag="latest"
 elasticsearch_image_name="thedutchselection/elasticsearch"
 elasticsearch_image_tag="1.7.1"
 postgresql_image_name="thedutchselection/postgresql"
-postgresql_image_tag="9.4.4"
+postgresql_image_tag="9.4.5"
 redis_image_name="thedutchselection/redis"
 redis_image_tag="3.0.5"
 
