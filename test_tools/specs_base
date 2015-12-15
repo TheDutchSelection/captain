@@ -64,14 +64,17 @@ start_elasticsearch_container () {
   --name "$container_name" \
   -d \
   -e "CLUSTER_NAME=test" \
+  -e "EXPECTED_NUMBER_OF_NODES=1" \
+  -e "HOST=127.0.0.1" \
   -e "NODE_NAME=test_node" \
   -e "NODE_MASTER=true" \
   -e "NODE_DATA=true" \
   -e "MAX_LOCAL_STORAGE_NODES=1" \
+  -e "MINIMUM_MASTER_NODES=1" \
+  -e "MINIMUM_NUMBER_OF_NODES=1" \
   -e "NUMBER_OF_SHARDS=5" \
   -e "NUMBER_OF_REPLICAS=0" \
   -e "PATH_DATA=/home/elastic/data/data" \
-  -e "PATH_WORK=/home/elastic/data/work" \
   -e "PATH_LOGS=/home/elastic/data/logs" \
   -e "PATH_REPO=/home/elastic/data/backups" \
   -e "PUBLISH_HOST=127.0.0.1" \
