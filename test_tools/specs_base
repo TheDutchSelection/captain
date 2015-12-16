@@ -81,8 +81,6 @@ start_elasticsearch_container () {
   -e "TRANSPORT_PORT=9300" \
   -e "HTTP_PORT=9200" \
   -e "DATA_DIRECTORY=/home/elasticsearch/data" \
-  -e "SUPERUSER_USERNAME=$elasticsearch_user_name" \
-  -e "SUPERUSER_PASSWORD=$elasticsearch_password" \
   --volumes-from "$data_container_name" \
   -p :9200 \
   -p :9200/udp \
