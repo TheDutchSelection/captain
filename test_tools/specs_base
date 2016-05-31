@@ -8,7 +8,7 @@ elasticsearch_image_tag="2.3.3"
 postgresql_image_name="thedutchselection/postgresql"
 postgresql_image_tag="9.4.5"
 redis_image_name="thedutchselection/redis"
-redis_image_tag="3.0.7"
+redis_image_tag="3.2.0"
 
 clean_up_images () {
   docker rmi $(/usr/bin/docker images -q -f 'dangling=true') || true
