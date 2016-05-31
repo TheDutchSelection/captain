@@ -23,8 +23,10 @@ FROM thedutchselection/captain_services_base:latest
 MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>
 
 RUN \
-  apk-install curl && \
-  apk-install docker
+  apk update && \
+  apk add curl && \
+  apk add docker && \
+  rm /var/cache/apk/*
 
 ADD files/scripts /usr/local/bin
 

@@ -13,13 +13,13 @@
 #
 # OTHER:
 
-FROM gliderlabs/alpine:3.2
+FROM thedutchselection/alpine:3.3
 MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>
 
-RUN apk-install bash
-
 RUN \
-  apk-install redis && \
+  apk update && \
+  apk add bash && \
+  apk add redis && \
   rm /etc/conf.d/redis && \
   rm /etc/logrotate.d/redis && \
   rm /etc/init.d/redis && \
@@ -29,7 +29,8 @@ RUN \
   rm /usr/bin/redis-server && \
   rm /usr/bin/redis-benchmark && \
   rm /usr/bin/redis-check-dump && \
-  rm /usr/bin/redis-check-aof
+  rm /usr/bin/redis-check-aof && \
+  rm /var/cache/apk/*
 
 ADD files/scripts /usr/local/bin
 
