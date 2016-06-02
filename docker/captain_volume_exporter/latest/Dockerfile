@@ -17,7 +17,7 @@
 # OTHER:
 #
 # To restore a volume use something like:
-# docker run --volumes-from postgresql_data --entrypoint "tar" -v $(pwd):/backup thedutchselection/captain_container_volume_exporter xvf /backup/backup.tar
+# docker run --volumes-from postgresql_data --entrypoint "tar" -v $(pwd):/backup thedutchselection/captain_volume_exporter xvf /backup/backup.tar
 
 FROM thedutchselection/captain_services_base:latest
 MAINTAINER Gerard Meijer <g.meijer@thedutchselection.com>
