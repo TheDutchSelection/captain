@@ -8,7 +8,7 @@
 # REDIS_PORT (ie. 6379)
 # REDIS_DATABASE (ie. 0)
 # REDIS_NAMESPACE (ie. "tds", : not allowed)
-# APP_EXCEPTIONS_AMOUNTS (ie. "elasticsearch_data:##!!2 elasticsearch_master:##!!4")
+# APP_EXCEPTIONS_AMOUNTS (ie. "price_comparator_nl_telecom:##!!2 insights:##!!4")
 # REFRESH_TIME (in seconds, ie. 15)
 #
 # OPTIONAL ENVS:
