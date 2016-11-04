@@ -1,15 +1,10 @@
 # NAME: Captain Services Base
 #
-# DESCRIPTION: Captain Services Base.
+# DESCRIPTION: Captain Services Base for all Captain Services.
 #
 # REQUIRED ENVS:
-# REDIS_HOST (ie. 127.0.0.1)
-# REDIS_PORT (ie. 6379)
-# REDIS_DATABASE (ie. 0)
-# REDIS_NAMESPACE (ie. "tds", : not allowed)
 #
 # OPTIONAL ENVS:
-# REDIS_PASSWORD (ie. abcdabcd)
 #
 # OTHER:
 
@@ -28,7 +23,6 @@ RUN \
   rm /usr/bin/redis-sentinel && \
   rm /usr/bin/redis-server && \
   rm /usr/bin/redis-benchmark && \
-  rm /usr/bin/redis-check-dump && \
   rm /usr/bin/redis-check-aof && \
   rm /var/cache/apk/*
 
