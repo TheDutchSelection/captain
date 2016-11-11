@@ -1,3 +1,0 @@
-#!groovy
-
-def redis_image_name = 'thedutchselection/redis'
