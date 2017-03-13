@@ -26,6 +26,9 @@ RUN \
   apk update && \
   apk add curl && \
   apk add docker && \
+  apk add python && \
+  apk add py-pip && \
+  pip install --upgrade --user awscli && \
   rm /var/cache/apk/*
 
 ADD files/scripts /usr/local/bin
