@@ -26,6 +26,8 @@ RUN \
   apk update && \
   apk add curl && \
   apk add docker && \
+  apk add groff && \
+  apk add less && \
   apk add python && \
   apk add py-pip && \
   pip install --upgrade --user awscli && \
