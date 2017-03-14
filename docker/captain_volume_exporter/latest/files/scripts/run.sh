@@ -5,7 +5,6 @@ set -e
 dir="${BASH_SOURCE%/*}"
 if [[ ! -d "$dir" ]]; then dir="$PWD"; fi
 . "$dir/captain_functions"
-. "$dir/aws_s3_functions"
 
 run_script () {
   local current_time=$(date +"%H:%M")
@@ -34,7 +33,7 @@ run_script () {
           echo "removing old local backup file $old_tar_file_with_path..."
           rm -f "$old_tar_file_with_path"
         fi
-        
+
         echo "sending $tar_file_with_path to AWS S3 bucket $AWS_S3_BUCKET_NAME on path $AWS_S3_PATH..."
         export AWS_DEFAULT_REGION="$AWS_S3_BUCKET_REGION"
         export AWS_ACCESS_KEY_ID="$AWS_S3_ACCESS_KEY_ID"
