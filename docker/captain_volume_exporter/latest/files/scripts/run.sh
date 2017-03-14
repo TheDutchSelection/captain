@@ -34,14 +34,12 @@ run_script () {
           echo "removing old local backup file $old_tar_file_with_path..."
           rm -f "$old_tar_file_with_path"
         fi
+        
         echo "sending $tar_file_with_path to AWS S3 bucket $AWS_S3_BUCKET_NAME on path $AWS_S3_PATH..."
-        # local aws_file="$AWS_S3_PATH""$tar_file"
-        # upload_to_aws_s3 "$AWS_S3_ACCESS_KEY_ID" "$AWS_S3_SECRET_ACCESS_KEY" "$AWS_S3_BUCKET_NAME" "$AWS_S3_BUCKET_REGION" "$aws_file" "$tar_file_with_path"
-
         export AWS_DEFAULT_REGION="$AWS_S3_BUCKET_REGION"
         export AWS_ACCESS_KEY_ID="$AWS_S3_ACCESS_KEY_ID"
         export AWS_SECRET_ACCESS_KEY="$AWS_S3_SECRET_ACCESS_KEY"
-        aws s3 cp "$tar_file_with_path" s3://"$AWS_S3_BUCKET_NAME"/"AWS_S3_PATH"
+        /root/.local/bin/aws s3 cp "$tar_file_with_path" s3://"$AWS_S3_BUCKET_NAME"/"$AWS_S3_PATH"
       fi
     fi
   done
