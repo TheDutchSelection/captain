@@ -95,6 +95,8 @@ def handle_update(options):
             logger.info("- probe_path: %s", probe_path)
 
             for server in servers:
+                logger.info("Connecting to %s...", server)
+
                 client = paramiko.client.SSHClient()
                 client.load_system_host_keys()
                 client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy)
@@ -103,26 +105,29 @@ def handle_update(options):
                 service_present = app_service_present(client, app)
 
                 if(service_present):
-                    logger.info("app present on %s", server)
+                    logger.info("App present on %s", server)
                     servers_to_update.append(server)
                 else:
-                    logger.info("app not present on %s", server)
+                    logger.info("App not present on %s", server)
 
                 client.close()
 
             for server in servers_to_update:
+                logger.info("Updating %s:%s on %s", docker_image_name, docker_image_tag, server)
+
                 client = paramiko.client.SSHClient()
                 client.load_system_host_keys()
                 client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy)
                 client.connect(server, "22", SSH_USERNAME)
 
-                logger.info("updating %s:%s on %s", docker_image_name, docker_image_tag, server)
                 update_docker_image_response = update_docker_image(client, docker_image_name, docker_image_tag)
 
                 if(update_docker_image_response != 0):
                     logger.warn("Updating of the docker image on %s failed, the deploy process was stopped.", server)
                     client.close()
                     raise CaptainException("Updating of the docker image on " + server + " failed, the deploy process was stopped.")
+                else:
+                    logger.info("Updating %s:%s on %s successful", docker_image_name, docker_image_tag, server)
 
                 client.close()
 
@@ -135,20 +140,22 @@ def handle_update(options):
                 logger.info("restarting %s on %s", app, server)
                 restart_service_response = restart_service(client, app)
 
+                if(restart_service_response != 0):
+                    logger.warn("Restarting %s on %s failed, the deploy process was stopped.", app, server)
+                    client.close()
+                    raise CaptainException("Restarting " + app + " on " + server + " failed, the deploy process was stopped.")
+                else:
+                    logger.info("Restarting %s on %s successful", app, server)
+
                 if(probe_path != ""):
-                    logger.info("probing %s", probe_path)
-                    logger.info("waiting at most %s for %s to come back on %s...", PROBE_TIME_OUT_SECONDS, app, server)
+                    logger.info("Probing %s", probe_path)
+                    logger.info("Waiting at most %s for %s to come back on %s...", PROBE_TIME_OUT_SECONDS, app, server)
                     probe_success = probe_service(client, app, probe_path)
 
                     if not(probe_success):
                         logger.warn("It seems that %s on %s did not come back up, the deploy process was stopped.", app, server)
                         client.close()
                         raise CaptainException("It seems that " + app + " on " + server + " did not come back up, the deploy process was stopped.")
-
-                if(restart_service_response != 0):
-                    logger.warn("Restarting %s on %s failed, the deploy process was stopped.", app, server)
-                    client.close()
-                    raise CaptainException("Restarting " + app + " on " + server + " failed, the deploy process was stopped.")
 
                 client.close()
 
