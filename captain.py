@@ -8,7 +8,7 @@ import time
 import urllib.parse
 import urllib.request
 
-PROBE_TIME_OUT_SECONDS = 10
+PROBE_TIME_OUT_SECONDS = 300
 SSH_USERNAME = "core"
 TCP_PORT = 15621
 
