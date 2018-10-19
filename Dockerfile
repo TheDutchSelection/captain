@@ -35,19 +35,19 @@ RUN \
   if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi && \
   if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
   rm -r /root/.cache && \
-  adduser -D -u 6666 appmaster
+  adduser -D -u 8765 captain
 
-ADD ./ /home/appmaster/application
-
-RUN \
-  chown -R appmaster:appmaster /home/appmaster
+ADD ./ /home/captain/application
 
 RUN \
-  pip3 install -r /home/appmaster/application/requirements.txt
+  chown -R captain:captain /home/captain
 
-USER appmaster
+RUN \
+  pip3 install -r /home/captain/application/requirements.txt
 
-WORKDIR /home/appmaster/application
+USER captain
+
+WORKDIR /home/captain/application
 
 EXPOSE 15621
 
