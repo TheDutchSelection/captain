@@ -188,7 +188,7 @@ def options_correct(options):
 
 
 def app_service_present(client, app):
-    stdin, stdout, stderr = client.exec_command("systemctl list-units | grep " + app)
+    stdin, stdout, stderr = client.exec_command("systemctl list-units | grep -w " + app)
     result = stdout.read().decode()
 
     return result != ""
