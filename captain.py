@@ -208,12 +208,6 @@ def restart_service(client, app):
 
 
 def probe_service(client, app, probe_path):
-    stdin, stdout, stderr = client.exec_command("docker inspect --format '{{ .NetworkSettings.Gateway }}' " + app)
-    docker_gateway = stdout.read().decode().rstrip()
-    stdin, stdout, stderr = client.exec_command("docker port " + app)
-    docker_port_result = stdout.read().decode().rstrip()
-    docker_port = docker_port_result[docker_port_result.index(':') + 1:docker_port_result.index(':') + 5]
-    url = "http://" + docker_gateway + ":" + docker_port + probe_path
     timeout = time.time() + PROBE_TIME_OUT_SECONDS
     probe_result = False
 
@@ -224,6 +218,12 @@ def probe_service(client, app, probe_path):
             probe_result = False
             break
 
+        stdin, stdout, stderr = client.exec_command("docker inspect --format '{{ .NetworkSettings.Gateway }}' " + app)
+        docker_gateway = stdout.read().decode().rstrip()
+        stdin, stdout, stderr = client.exec_command("docker port " + app)
+        docker_port_result = stdout.read().decode().rstrip()
+        docker_port = docker_port_result[docker_port_result.index(':') + 1:docker_port_result.index(':') + 5]
+        url = "http://" + docker_gateway + ":" + docker_port + probe_path
         stdin, stdout, stderr = client.exec_command("curl -s -o /dev/null -w \"%{http_code}\" " + url)
         status = stdout.read().decode()
 
