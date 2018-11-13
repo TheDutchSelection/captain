@@ -196,7 +196,7 @@ def app_service_present(client, app):
 
 
 def remove_old_docker_images(client):
-    client.exec_command(docker rmi `docker images -q -f "dangling=true"`)
+    client.exec_command("docker rmi `docker images -q -f 'dangling=true'`")
 
 
 def update_docker_image(client, docker_image_name, docker_image_tag):
