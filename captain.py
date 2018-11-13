@@ -195,7 +195,7 @@ def app_service_present(client, app):
     return result != ""
 
 
-def remove_old_docker_images(client)
+def remove_old_docker_images(client):
     client.exec_command(docker rmi `docker images -q -f "dangling=true"`)
 
 
