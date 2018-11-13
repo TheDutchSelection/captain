@@ -120,6 +120,7 @@ def handle_update(options):
                 client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy)
                 client.connect(server, "22", SSH_USERNAME)
 
+                remove_old_docker_images(client)
                 update_docker_image_response = update_docker_image(client, docker_image_name, docker_image_tag)
 
                 if(update_docker_image_response != 0):
@@ -192,6 +193,10 @@ def app_service_present(client, app):
     result = stdout.read().decode()
 
     return result != ""
+
+
+def remove_old_docker_images(client)
+    client.exec_command(docker rmi `docker images -q -f "dangling=true"`)
 
 
 def update_docker_image(client, docker_image_name, docker_image_tag):
