@@ -120,7 +120,7 @@ def handle_update(options):
                 client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy)
                 client.connect(server, "22", SSH_USERNAME)
 
-                logger.info("Start with removing old docker images", server)
+                logger.info("Start with removing old docker images")
                 remove_old_docker_images(client)
 
                 update_docker_image_response = update_docker_image(client, docker_image_name, docker_image_tag)
