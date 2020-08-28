@@ -9,7 +9,7 @@ import urllib.parse
 import urllib.request
 
 PROBE_TIME_OUT_SECONDS = 300
-SSH_USERNAME = "core"
+SSH_USERNAME = "tds"
 TCP_PORT = 15621
 
 class CaptainException(Exception):
