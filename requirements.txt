@@ -2,7 +2,7 @@ asn1crypto==0.24.0
 autopep8==1.4
 bcrypt==3.1.4
 cffi==1.11.5
-cryptography==2.3.1
+cryptography==3.2
 future==0.16.0
 idna==2.7
 jedi==0.13.1
