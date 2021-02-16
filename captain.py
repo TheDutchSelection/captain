@@ -12,6 +12,7 @@ PROBE_TIME_OUT_SECONDS = 300
 SSH_USERNAME = "tds"
 TCP_PORT = 15621
 
+
 class CaptainException(Exception):
     pass
 
@@ -43,7 +44,8 @@ def start():
         logger.info("Connection from: %s", repr(addr))
         request = client.recv(4096)
         response = handle_request(request)
-        response_message = "HTTP/1.1 " + response['status'] + "\nContent-Type: application/json\n\n{\"status\": \"" + response['status'] + "\", \"message\": \"" + response['message'] + "\"}\n"
+        response_message = "HTTP/1.1 " + response['status'] + "\nContent-Type: application/json\n\n{\"status\": \"" + \
+                           response['status'] + "\", \"message\": \"" + response['message'] + "\"}\n"
         client.send(response_message.encode("UTF-8"))
         client.close()
 
@@ -58,7 +60,7 @@ def handle_request(request):
     url = urllib.parse.urlparse(url_part)
     path = url.path
     query = urllib.parse.parse_qs(url.query)
-    if(path == "/update/"):
+    if (path == "/update/"):
         response = handle_update(query)
     else:
         response = {
@@ -76,10 +78,11 @@ def handle_update(options):
     }
 
     try:
-        if(options_correct(options)):
+        if (options_correct(options)):
             app = options["app"][0]
             docker_image_name = options["docker_image_name"][0]
             docker_image_tag = options["docker_image_tag"][0]
+            gracefully_kill_workers = options.get("gracefully_kill_workers", [""])[0]
             probe_path = options.get("probe_path", [""])[0]
             app_environment = options["env"][0].upper()
             app_servers_var = "APP_SERVERS_" + app_environment
@@ -92,6 +95,7 @@ def handle_update(options):
             logger.info("- app: %s", app)
             logger.info("- docker_image_name: %s", docker_image_name)
             logger.info("- docker_image_tag: %s", docker_image_tag)
+            logger.info("- gracefully_kill_workers: %s", gracefully_kill_workers)
             logger.info("- probe_path: %s", probe_path)
 
             for server in servers:
@@ -104,7 +108,7 @@ def handle_update(options):
 
                 service_present = app_service_present(client, app)
 
-                if(service_present):
+                if (service_present):
                     logger.info("App present on %s", server)
                     servers_to_update.append(server)
                 else:
@@ -125,10 +129,11 @@ def handle_update(options):
 
                 update_docker_image_response = update_docker_image(client, docker_image_name, docker_image_tag)
 
-                if(update_docker_image_response != 0):
+                if (update_docker_image_response != 0):
                     logger.warn("Updating of the docker image on %s failed, the deploy process was stopped.", server)
                     client.close()
-                    raise CaptainException("Updating of the docker image on " + server + " failed, the deploy process was stopped.")
+                    raise CaptainException(
+                        "Updating of the docker image on " + server + " failed, the deploy process was stopped.")
                 else:
                     logger.info("Updating %s:%s on %s successful", docker_image_name, docker_image_tag, server)
 
@@ -140,25 +145,32 @@ def handle_update(options):
                 client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy)
                 client.connect(server, "22", SSH_USERNAME)
 
+                if (gracefully_kill_workers != ""):
+                    logger.info("Waiting for the workers for %s to stop working on %s...", app, server)
+                    gracefully_kill_workers(client, app)
+
                 logger.info("restarting %s on %s", app, server)
                 restart_service_response = restart_service(client, app)
 
-                if(restart_service_response != 0):
+                if (restart_service_response != 0):
                     logger.warn("Restarting %s on %s failed, the deploy process was stopped.", app, server)
                     client.close()
-                    raise CaptainException("Restarting " + app + " on " + server + " failed, the deploy process was stopped.")
+                    raise CaptainException(
+                        "Restarting " + app + " on " + server + " failed, the deploy process was stopped.")
                 else:
                     logger.info("Restarting %s on %s successful", app, server)
 
-                if(probe_path != ""):
+                if (probe_path != ""):
                     logger.info("Probing %s", probe_path)
                     logger.info("Waiting at most %s for %s to come back on %s...", PROBE_TIME_OUT_SECONDS, app, server)
                     probe_success = probe_service(client, app, probe_path)
 
-                    if not(probe_success):
-                        logger.warn("It seems that %s on %s did not come back up, the deploy process was stopped.", app, server)
+                    if not (probe_success):
+                        logger.warn("It seems that %s on %s did not come back up, the deploy process was stopped.", app,
+                                    server)
                         client.close()
-                        raise CaptainException("It seems that " + app + " on " + server + " did not come back up, the deploy process was stopped.")
+                        raise CaptainException(
+                            "It seems that " + app + " on " + server + " did not come back up, the deploy process was stopped.")
 
                 client.close()
 
@@ -205,7 +217,8 @@ def remove_old_docker_images(client):
 
 
 def update_docker_image(client, docker_image_name, docker_image_tag):
-    docker_image = os.environ["DOCKER_REGISTRY_HOST"] + ":" + os.environ["DOCKER_REGISTRY_PORT"] + "/thedutchselection/" + docker_image_name + ":" + docker_image_tag
+    docker_image = os.environ["DOCKER_REGISTRY_HOST"] + ":" + os.environ[
+        "DOCKER_REGISTRY_PORT"] + "/thedutchselection/" + docker_image_name + ":" + docker_image_tag
     stdin, stdout, stderr = client.exec_command("docker pull " + docker_image)
 
     return stdout.channel.recv_exit_status()
@@ -217,6 +230,12 @@ def restart_service(client, app):
     return stdout.channel.recv_exit_status()
 
 
+def gracefully_kill_workers(client, app):
+    stdin, stdout, stderr = client.exec_command("docker exec " + app + " /usr/local/bin/gracefully_quit_workers.sh")
+
+    return stdout.channel.recv_exit_status()
+
+
 def probe_service(client, app, probe_path):
     timeout = time.time() + PROBE_TIME_OUT_SECONDS
     probe_result = False
@@ -224,7 +243,7 @@ def probe_service(client, app, probe_path):
     while True:
         time.sleep(1)
 
-        if(time.time() > timeout):
+        if (time.time() > timeout):
             probe_result = False
             break
 
@@ -237,7 +256,7 @@ def probe_service(client, app, probe_path):
         stdin, stdout, stderr = client.exec_command("curl -s -o /dev/null -w \"%{http_code}\" " + url)
         status = stdout.read().decode()
 
-        if(status == "200"):
+        if (status == "200"):
             probe_result = True
             break
 
