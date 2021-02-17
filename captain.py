@@ -147,7 +147,7 @@ def handle_update(options):
 
                 if (gracefully_kill_workers != ""):
                     logger.info("Waiting for the workers for %s to stop working on %s...", app, server)
-                    gracefully_kill_workers(client, app)
+                    gracefully_quit_workers(client, app)
 
                 logger.info("Restarting %s on %s", app, server)
                 restart_service_response = restart_service(client, app)
@@ -232,7 +232,7 @@ def restart_service(client, app):
     return stdout.channel.recv_exit_status()
 
 
-def gracefully_kill_workers(client, app):
+def gracefully_quit_workers(client, app):
     stdin, stdout, stderr = client.exec_command("docker exec " + app + " /usr/local/bin/gracefully_quit_workers.sh")
 
     return stdout.channel.recv_exit_status()
