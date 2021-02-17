@@ -149,7 +149,7 @@ def handle_update(options):
                     logger.info("Waiting for the workers for %s to stop working on %s...", app, server)
                     gracefully_kill_workers(client, app)
 
-                logger.info("restarting %s on %s", app, server)
+                logger.info("Restarting %s on %s", app, server)
                 restart_service_response = restart_service(client, app)
 
                 if (restart_service_response != 0):
@@ -162,7 +162,7 @@ def handle_update(options):
 
                 if (probe_path != ""):
                     logger.info("Probing %s", probe_path)
-                    logger.info("Waiting at most %s for %s to come back on %s...", PROBE_TIME_OUT_SECONDS, app, server)
+                    logger.info("Waiting at most %s seconds for %s to come back on %s...", PROBE_TIME_OUT_SECONDS, app, server)
                     probe_success = probe_service(client, app, probe_path)
 
                     if not (probe_success):
@@ -171,6 +171,8 @@ def handle_update(options):
                         client.close()
                         raise CaptainException(
                             "It seems that " + app + " on " + server + " did not come back up, the deploy process was stopped.")
+                    else:
+                        logger.info("App %s on %s is accepting http requests again.", app, server)
 
                 client.close()
 
