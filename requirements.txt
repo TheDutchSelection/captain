@@ -7,7 +7,7 @@ future==0.16.0
 idna==2.7
 jedi==0.13.1
 mccabe==0.6.1
-paramiko==2.4.2
+paramiko==2.10.1
 parso==0.3.1
 pluggy==0.7.1
 pyasn1==0.4.4
